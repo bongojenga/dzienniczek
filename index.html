@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Głowa">
+<meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="ikona.png">
+<link rel="icon" href="ikona.png">
+<title>Głowa</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--text:#1b1b1a;--muted:#6b6a66;--line:#e3e1db;--line2:#b9b7ae;--chip:#eeede8;--accent:#2a78d6;--accent-bg:#e3eefb;--danger:#c93a3a;--danger-bg:#fbe9e9;--warn-bg:#fcf1d9;--warn:#8a5a00;--ok:#1f7a3a;
+--s1:#2a78d6;--s2:#eb6834;--h1:#f6c9b1;--h2:#ee9a72;--h3:#d95926;--h4:#9b3814;--sel:#d95926;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--card:#1f1f1d;--text:#f0efec;--muted:#a9a89f;--line:#34332f;--line2:#5c5b55;--chip:#2c2b28;--accent:#5c9ded;--accent-bg:#1d2d44;--danger:#ef7070;--danger-bg:#3a1f1f;--warn-bg:#3a2e14;--warn:#f1c46b;--ok:#5fcf7f;
+--s1:#3987e5;--s2:#d95926;--h1:#5a2610;--h2:#93391a;--h3:#d2582a;--h4:#f39a6e;--sel:#e0663a;color-scheme:dark}}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:17px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{padding:env(safe-area-inset-top) 0 calc(78px + env(safe-area-inset-bottom))}
+main{max-width:560px;margin:0 auto;padding:12px 14px 24px}
+h1{font-size:26px;margin:8px 0 2px;font-weight:650}
+h2{font-size:19px;margin:0 0 8px;font-weight:600}
+h3{font-size:16px;margin:0 0 8px;font-weight:600}
+p{margin:6px 0}
+.hint{color:var(--muted);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.blk{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+details.more{padding:0}
+details.more>summary{padding:14px;font-weight:600;cursor:pointer;list-style:none}
+details.more>summary::after{content:"▾";float:right;color:var(--muted)}
+details.more[open]>summary::after{content:"▴"}
+details.more .blk{border:0;border-top:1px solid var(--line);border-radius:0;margin:0}
+button{font:inherit;color:inherit}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:18px;font-weight:600;background:var(--accent);color:#fff;cursor:pointer}
+.btn.big{padding:26px 16px;font-size:22px;background:var(--danger);margin:14px 0}
+.btn.sec{background:var(--chip);color:var(--text)}
+.btn.small{padding:11px;font-size:16px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid transparent;background:var(--chip);border-radius:999px;padding:9px 14px;font-size:15px;cursor:pointer;min-height:40px}
+.chip.on{background:var(--accent);color:#fff}
+.chip.red.on{background:var(--danger)}
+.chip.ghost{background:transparent;border-color:var(--line2)}
+input[type=datetime-local],input[type=date],input[type=time],input[type=number],input[type=text],textarea,select{font:inherit;font-size:17px;width:100%;padding:11px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--card);color:var(--text)}
+textarea{min-height:84px;resize:vertical}
+input[type=datetime-local],input[type=date],input[type=time]{min-height:46px;-webkit-appearance:none;appearance:none}
+.sl{position:relative;padding:6px 0 2px}
+.sl input[type=range]{width:100%;height:36px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;touch-action:none}
+.sl input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--h1),var(--h3),var(--h4))}
+.sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;margin-top:-12px;border-radius:50%;background:var(--card);border:3px solid var(--text)}
+.sl.unset input[type=range]::-webkit-slider-thumb{border-color:var(--line2);background:var(--chip)}
+.sl input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--h1),var(--h3),var(--h4))}
+.sl input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--card);border:3px solid var(--text)}
+.sl.neutral input[type=range]::-webkit-slider-runnable-track{background:var(--line2)}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.val{font-size:28px;font-weight:700;float:right;line-height:1}
+.val small{font-size:14px;font-weight:500;color:var(--muted)}
+.err{color:var(--danger);font-size:14px;margin-top:6px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:48px;height:48px;border-radius:12px;border:0;background:var(--chip);font-size:24px;cursor:pointer}
+.stepper span{min-width:56px;text-align:center;font-size:22px;font-weight:600}
+.field{margin:12px 0 4px}
+.field>label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+.med{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.med .top{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.med .x{border:0;background:transparent;color:var(--muted);font-size:14px;cursor:pointer;padding:4px}
+.panel{border:2px solid var(--accent);border-radius:12px;padding:12px;margin-top:8px}
+.banner{border-radius:12px;padding:12px 14px;margin:12px 0;font-size:15px}
+.banner.red{background:var(--danger-bg);color:var(--danger);font-weight:600}
+.banner.warn{background:var(--warn-bg);color:var(--warn)}
+.banner.info{background:var(--accent-bg)}
+.savebar{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line);z-index:5}
+.savebar .in{max-width:560px;margin:0 auto}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+.tabs button{flex:1;border:0;background:transparent;padding:10px 0 12px;font-size:13px;color:var(--muted);cursor:pointer}
+.tabs button b{display:block;font-size:20px;line-height:1.1;font-weight:500}
+.tabs button.on{color:var(--accent);font-weight:600}
+.top{display:flex;align-items:center;gap:8px}
+.back{border:0;background:transparent;color:var(--accent);font-size:17px;padding:8px 0;cursor:pointer}
+.status{font-size:13px;color:var(--muted);margin:2px 0 6px}
+.status.bad{color:var(--danger)}
+.ep{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.ep:first-child{border-top:0}
+.pill{min-width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.ep .t{flex:1}
+.ep .t small{display:block;color:var(--muted);font-size:14px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.tile .n{font-size:26px;font-weight:700}
+.tile .l{font-size:13px;color:var(--muted)}
+.bar{height:10px;border-radius:5px;background:var(--chip);overflow:hidden;margin:4px 0 10px}
+.bar>i{display:block;height:100%;border-radius:5px;background:var(--s1)}
+.bar.hot>i{background:var(--danger)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:4px 0 6px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tip{font-size:14px;min-height:20px;color:var(--text);margin-top:4px}
+svg text{font-size:12px;fill:var(--muted)}
+svg.head text{font-size:22px}
+.r{fill:var(--card);stroke:var(--line2);stroke-width:1}
+.r.i{cursor:pointer}
+.r.on{fill:var(--sel)}
+.np{pointer-events:none}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:7px 4px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px;border-top:0}
+td.num,th.num{text-align:right}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:15px;z-index:9;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.link{border:0;background:transparent;color:var(--accent);padding:0;font-size:15px;cursor:pointer;text-decoration:underline}
+.danger-link{color:var(--danger)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav class="tabs" id="tabs" hidden>
+  <button data-tab="home"><b>●</b>Start</button>
+  <button data-tab="history"><b>☰</b>Historia</button>
+  <button data-tab="stats"><b>▦</b>Statystyki</button>
+  <button data-tab="more"><b>⋯</b>Więcej</button>
+</nav>
+<div class="toast" id="toast"></div>
+<script>
+'use strict';
+var WERSJA_APP = '1.0';
+
+// ------------------------------------------------------------ narzędzia
+var $ = function (s, el) { return (el || document).querySelector(s); };
+var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
+var LS = {
+  get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+function esc(s) { return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function uuid() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+}
+function pad(n) { return String(n).padStart(2, '0'); }
+var TZ = (function () { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; } })();
+function localStr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+function inputVal(s) { return String(s || '').replace(' ', 'T').slice(0, 16); }
+function fromLocal(s) {
+  var m = String(s || '').match(/(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/);
+  return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : null;
+}
+function epStart(e) { var d = e.start_utc ? new Date(e.start_utc) : fromLocal(e.start_lokalny); return d && !isNaN(d) ? d : null; }
+function epEnd(e) { if (!e.koniec_lokalny) return null; var d = e.koniec_utc ? new Date(e.koniec_utc) : fromLocal(e.koniec_lokalny); return d && !isNaN(d) ? d : null; }
+function todayKey() { return localStr(new Date()).slice(0, 10); }
+function addDays(key, n) { var p = key.split('-'); var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n)); return d.toISOString().slice(0, 10); }
+var DNI = ['nd', 'pn', 'wt', 'śr', 'cz', 'pt', 'sb'];
+var MIES = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
+function dow(key) { var p = key.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay(); }
+function fmtDay(key) { var p = key.split('-'); return DNI[dow(key)] + ' ' + (+p[2]) + '.' + p[1]; }
+function hhmm(s) { return String(s || '').slice(11, 16); }
+function num(v) { return v === '' || v === null || v === undefined || isNaN(Number(v)) ? null : Number(v); }
+function fmtDur(h) {
+  if (h === null || h === undefined || isNaN(h)) return '';
+  var m = Math.round(h * 60);
+  if (m < 60) return m + ' min';
+  var hh = Math.floor(m / 60), mm = m % 60;
+  return hh + ' h' + (mm ? ' ' + mm + ' min' : '');
+}
+function fmtNum(v) { return String(Math.round(v * 10) / 10).replace('.', ','); }
+function doseTxt(d, unit) {
+  var n = Number(d);
+  var t = n === 0.5 ? '½' : (n === 1.5 ? '1½' : String(n).replace('.', ','));
+  return t + ' ' + (unit || '');
+}
+function natColor(n) {
+  if (n === null) return 'var(--chip)';
+  if (n <= 3) return 'var(--h1)';
+  if (n <= 6) return 'var(--h2)';
+  if (n <= 8) return 'var(--h3)';
+  return 'var(--h4)';
+}
+function natInk(n) { return n !== null && n >= 7 ? '#fff' : 'var(--text)'; }
+function natWord(n) {
+  if (n === null) return 'dotknij suwaka';
+  if (n === 0) return 'brak bólu';
+  if (n <= 3) return 'łagodny';
+  if (n <= 6) return 'umiarkowany';
+  if (n <= 9) return 'silny';
+  return 'najgorszy możliwy';
+}
+var toastT;
+function toast(t) { var el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('on'); }, 2200); }
+
+// ------------------------------------------------------------ konfiguracja i dane
+function decodeCfg(s) {
+  try {
+    var m = String(s).match(/c=([A-Za-z0-9_\-=]+)/);
+    var code = (m ? m[1] : String(s)).trim().replace(/-/g, '+').replace(/_/g, '/');
+    while (code.length % 4) code += '=';
+    var j = JSON.parse(decodeURIComponent(escape(atob(code))));
+    if (j && j.a && j.k) return { a: j.a, k: j.k };
+  } catch (e) {}
+  return null;
+}
+var cfg = decodeCfg(location.hash) || LS.get('cfg', null);
+if (cfg) LS.set('cfg', cfg);
+var cache = LS.get('cache', null);
+var outbox = LS.get('outbox', []);
+var sync = { busy: false, ok: null, err: null };
+var view = { name: cfg ? 'home' : 'setup' };
+
+function prof() { return cache && cache.osoba && cache.osoba.profil === 'ojciec' ? 'ojciec' : 'syn'; }
+function lekiDorazne() { return ((cache && cache.leki) || []).filter(function (l) { return l.rola === 'doraźny'; }); }
+function lekById(id) { return ((cache && cache.leki) || []).filter(function (l) { return l.id_leku === id; })[0]; }
+
+function applyLocal(op) {
+  if (!cache) return;
+  var d = op.data;
+  function upsert(arr, obj) { var i = arr.findIndex(function (x) { return x.id === obj.id; }); if (i >= 0) arr[i] = obj; else arr.push(obj); }
+  function remove(arr, id) { var i = arr.findIndex(function (x) { return x.id === id; }); if (i >= 0) arr.splice(i, 1); }
+  if (op.type === 'saveEpisode') upsert(cache.epizody, JSON.parse(JSON.stringify(d)));
+  if (op.type === 'deleteEpisode') remove(cache.epizody, d.id);
+  if (op.type === 'saveBp') upsert(cache.cisnienie, JSON.parse(JSON.stringify(d)));
+  if (op.type === 'deleteBp') remove(cache.cisnienie, d.id);
+  if (op.type === 'saveEvent') upsert(cache.zmiany, JSON.parse(JSON.stringify(d)));
+  if (op.type === 'deleteEvent') remove(cache.zmiany, d.id);
+}
+function queue(type, data) {
+  var op = { opId: uuid(), type: type, data: data };
+  outbox.push(op);
+  LS.set('outbox', outbox);
+  applyLocal(op);
+  LS.set('cache', cache);
+  doSync();
+}
+function doSync() {
+  if (!cfg || sync.busy) return;
+  sync.busy = true;
+  renderStatus();
+  var ops = outbox.slice();
+  fetch(cfg.a, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ key: cfg.k, ops: ops }) })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j.ok) throw new Error(j.error || 'błąd serwera');
+      var sent = {};
+      ops.forEach(function (o) { sent[o.opId] = true; });
+      outbox = outbox.filter(function (o) { return !sent[o.opId]; });
+      LS.set('outbox', outbox);
+      cache = { osoba: j.osoba, leki: j.leki || [], epizody: j.epizody || [], cisnienie: j.cisnienie || [], zmiany: j.zmiany || [], ts: Date.now() };
+      outbox.forEach(applyLocal);
+      LS.set('cache', cache);
+      var bledy = (j.wyniki || []).filter(function (w) { return !w.ok; });
+      sync.ok = Date.now();
+      sync.err = bledy.length ? ('Arkusz odrzucił wpis: ' + bledy[0].error) : null;
+    })
+    .catch(function (e) {
+      sync.err = navigator.onLine === false ? 'Brak internetu. Wpisy czekają w telefonie i wyślą się same.' : ('Nie udało się połączyć z arkuszem (' + e.message + '). Wpisy czekają w telefonie.');
+    })
+    .then(function () {
+      sync.busy = false;
+      if (outbox.length && !sync.err) { doSync(); return; }
+      if (['home', 'history', 'stats', 'more', 'setup'].indexOf(view.name) >= 0) render(); else renderStatus();
+    });
+}
+function statusHtml() {
+  if (sync.busy) return '<div class="status">Łączę z arkuszem…</div>';
+  if (sync.err) return '<div class="status bad">' + esc(sync.err) + (outbox.length ? ' (czeka: ' + outbox.length + ')' : '') + ' <button class="link" data-act="sync">Spróbuj ponownie</button></div>';
+  if (outbox.length) return '<div class="status">Czeka na wysłanie: ' + outbox.length + '</div>';
+  if (sync.ok) return '<div class="status">Zapisane w arkuszu ✓</div>';
+  return '<div class="status"></div>';
+}
+function renderStatus() { var el = $('.status'); if (el) el.outerHTML = statusHtml(); }
+
+// ------------------------------------------------------------ nawigacja
+function nav(name, params) {
+  view = Object.assign({ name: name }, params || {});
+  render();
+  window.scrollTo(0, 0);
+}
+function render() {
+  var app = $('#app');
+  var tabs = ['home', 'history', 'stats', 'more'].indexOf(view.name) >= 0;
+  $('#tabs').hidden = !tabs;
+  $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.tab === view.name); });
+  if (!cfg) view.name = 'setup';
+  if (view.name !== 'setup' && !cache) { app.innerHTML = '<h1>Dzienniczek</h1>' + statusHtml() + '<div class="card">Pobieram dane z arkusza… Przy pierwszym uruchomieniu potrzebny jest internet.</div>'; return; }
+  var f = { setup: vSetup, home: vHome, form: vForm, close: vClose, history: vHistory, stats: vStats, more: vMore, bp: vBp, event: vEvent, meds: vMeds }[view.name] || vHome;
+  app.innerHTML = f();
+  if (view.name === 'form') afterForm();
+}
+function header(title, back) {
+  return '<div class="top"><button class="back" data-act="back" data-to="' + (back || 'home') + '">‹ Wróć</button></div><h1>' + esc(title) + '</h1>';
+}
+
+// ------------------------------------------------------------ ekran: konfiguracja
+function vSetup() {
+  return '<h1>Dzienniczek bólu głowy</h1>' +
+    '<div class="card"><p>Ten telefon nie jest jeszcze połączony z arkuszem.</p>' +
+    '<p class="hint">Otwórz w Safari link otrzymany z arkusza (menu Dzienniczek → Linki dla telefonów). Możesz też wkleić go tutaj:</p>' +
+    '<textarea id="cfgIn" placeholder="https://…github.io/dzienniczek/#c=…"></textarea>' +
+    '<div class="err" id="cfgErr" hidden>To nie wygląda na poprawny link. Skopiuj go jeszcze raz z arkusza.</div>' +
+    '<p></p><button class="btn" data-act="cfgSave">Połącz</button></div>';
+}
+
+// ------------------------------------------------------------ ekran: start
+function openEpisodes() {
+  return cache.epizody.filter(function (e) { return !e.koniec_lokalny; }).sort(function (a, b) { return String(b.start_lokalny).localeCompare(a.start_lokalny); });
+}
+function pendingEvals() {
+  var now = Date.now(), out = [];
+  cache.epizody.forEach(function (e) {
+    (e.leki || []).forEach(function (l) {
+      var t = l.czas_utc ? new Date(l.czas_utc).getTime() : (fromLocal(l.czas_lokalny) || new Date(0)).getTime();
+      if (!l.efekt_2h && now - t >= 2 * 3600000 && now - t < 3 * 86400000) out.push({ ep: e, l: l });
+    });
+  });
+  return out;
+}
+function vHome() {
+  var o = cache.osoba, s = '';
+  s += '<h1>Cześć, ' + esc(o.imie) + '</h1>' + statusHtml();
+  if (window.navigator.standalone === false) {
+    s += '<div class="banner info"><b>Dodaj aplikację do ekranu początkowego:</b> dotknij przycisku Udostępnij (kwadrat ze strzałką) → „Do ekranu początkowego” → Dodaj. Potem otwieraj ją z ikony „Głowa”.</div>';
+  }
+  var moh = mohStats();
+  if (moh.ten >= 8 || moh.simple >= 12) {
+    s += '<div class="banner warn">W ostatnich 30 dniach: leki doraźne przez ' + moh.any + ' dni (tryptany/złożone/opioidy: ' + moh.ten + ', proste: ' + moh.simple + '). Szczegóły w Statystykach. Warto o tym powiedzieć lekarzowi.</div>';
+  }
+  openEpisodes().forEach(function (e) {
+    var st = epStart(e), h = st ? (Date.now() - st.getTime()) / 3600000 : null;
+    s += '<div class="card"><h3>Ból trwa od ' + esc(hhmm(e.start_lokalny)) + (h !== null && h >= 20 ? ' (' + fmtDay(e.start_lokalny.slice(0, 10)) + ')' : '') + '</h3>' +
+      '<p class="hint">' + (h !== null ? fmtDur(h) : '') + (num(e.natezenie_max) !== null ? ' · natężenie ' + e.natezenie_max + '/10' : '') + ((e.leki || []).length ? ' · leki: ' + e.leki.length : '') + '</p>' +
+      '<div class="row"><button class="btn small" data-act="closeEp" data-id="' + esc(e.id) + '">Przestało boleć</button><button class="btn small sec" data-act="editEp" data-id="' + esc(e.id) + '">Uzupełnij</button></div></div>';
+  });
+  pendingEvals().forEach(function (x) {
+    s += '<div class="card"><h3>Jak zadziałał lek?</h3><p class="hint">' + esc(x.l.lek || (lekById(x.l.id_leku) || {}).nazwa || 'Lek') + ' ' + esc(doseTxt(x.l.dawka, x.l.jednostka)) + ', przyjęty ' + esc(hhmm(x.l.czas_lokalny)) + ' (' + esc(fmtDay(String(x.l.czas_lokalny).slice(0, 10))) + '). Jak było po 2 godzinach?</p><div class="chips">' +
+      [['brak', 'Nie pomógł'], ['ulga', 'Ulga'], ['ustąpił', 'Przestało boleć']].map(function (v) {
+        return '<button class="chip" data-act="evalEff" data-ep="' + esc(x.ep.id) + '" data-l="' + esc(x.l.id) + '" data-v="' + v[0] + '">' + v[1] + '</button>';
+      }).join('') + '</div></div>';
+  });
+  s += '<button class="btn big" data-act="newEp">Boli mnie teraz</button>';
+  s += '<div class="row"><button class="btn sec small" data-act="newEp" data-back="1">Wpis wstecz</button>' +
+    (o.pokaz_cisnienie ? '<button class="btn sec small" data-act="go" data-to="bp">Ciśnienie</button>' : '') + '</div>';
+  var st = rangeStats(30);
+  s += '<div class="tiles"><div class="tile"><div class="n">' + st.painDays + '</div><div class="l">dni z bólem (30 dni)</div></div><div class="tile"><div class="n">' + st.medDays + '</div><div class="l">dni z lekiem doraźnym</div></div></div>';
+  var last = cache.epizody.slice().sort(function (a, b) { return String(b.start_lokalny).localeCompare(a.start_lokalny); }).slice(0, 3);
+  if (last.length) s += '<div class="card"><h3>Ostatnie wpisy</h3>' + last.map(epRow).join('') + '</div>';
+  return s;
+}
+function epRow(e) {
+  var n = num(e.natezenie_max);
+  var leki = (e.leki || []).map(function (l) { return (l.lek || (lekById(l.id_leku) || {}).nazwa || '') + ' ' + doseTxt(l.dawka, l.jednostka); }).join(', ');
+  var st = epStart(e), en = epEnd(e);
+  var czas = hhmm(e.start_lokalny) + (e.koniec_lokalny ? '–' + hhmm(e.koniec_lokalny) : ' (trwa)') + (st && en ? ' · ' + fmtDur((en - st) / 3600000) : '');
+  return '<div class="ep" data-act="editEp" data-id="' + esc(e.id) + '"><div class="pill" style="background:' + natColor(n) + ';color:' + natInk(n) + '">' + (n === null ? '–' : n) + '</div>' +
+    '<div class="t">' + esc(fmtDay(String(e.start_lokalny).slice(0, 10))) + ', ' + esc(czas) + '<small>' + esc([strona(e.lokalizacja), e.charakter, leki].filter(String).join(' · ') || 'bez szczegółów') + '</small></div></div>';
+}
+
+// ------------------------------------------------------------ mapa głowy
+var REG = {
+  CZOLO_P: 'czoło prawe', CZOLO_L: 'czoło lewe', SKRON_P: 'skroń prawa', SKRON_L: 'skroń lewa', OKO_P: 'oko prawe', OKO_L: 'oko lewe',
+  TWARZ_P: 'twarz prawa', TWARZ_L: 'twarz lewa', UCHO_P: 'ucho prawe', UCHO_L: 'ucho lewe', CIEMIE: 'ciemię (czubek)',
+  POTYLICA_P: 'potylica prawa', POTYLICA_L: 'potylica lewa', KARK_P: 'kark prawy', KARK_L: 'kark lewy'
+};
+function strona(lok) {
+  var k = String(lok || '').split(';').filter(String);
+  if (!k.length) return '';
+  var L = k.some(function (x) { return /_L$/.test(x); }), P = k.some(function (x) { return /_P$/.test(x); });
+  return L && P ? 'obustronny' : L ? 'lewostronny' : P ? 'prawostronny' : 'linia środkowa';
+}
+function headSvg(o) {
+  o = o || {};
+  var sel = o.sel || {}, fill = o.fill || {}, tips = o.tips || {}, inter = !!o.inter, u = o.uid || 'm';
+  function a(id) {
+    return 'class="r' + (inter ? ' i' : '') + (sel[id] ? ' on' : '') + '" data-id="' + id + '"' + (fill[id] ? ' style="fill:' + fill[id] + '"' : '') + (tips[id] ? ' data-tip="' + esc(tips[id]) + '"' : '');
+  }
+  var np = 'class="np" style="fill:var(--chip);stroke:var(--line2)"';
+  return '<svg class="head" viewBox="0 0 680 360" width="100%" style="display:block;max-width:560px;margin:0 auto" role="img" aria-label="Mapa głowy">' +
+    '<defs><clipPath id="hf' + u + '"><ellipse cx="170" cy="160" rx="95" ry="120"/></clipPath><clipPath id="hb' + u + '"><ellipse cx="510" cy="155" rx="95" ry="118"/></clipPath></defs>' +
+    '<rect x="135" y="262" width="70" height="58" ' + np + '/>' +
+    '<ellipse ' + a('UCHO_P') + ' cx="72" cy="160" rx="16" ry="28"/><ellipse ' + a('UCHO_L') + ' cx="268" cy="160" rx="16" ry="28"/>' +
+    '<g clip-path="url(#hf' + u + ')">' +
+    '<rect ' + a('CZOLO_P') + ' x="70" y="35" width="100" height="75"/><rect ' + a('CZOLO_L') + ' x="170" y="35" width="100" height="75"/>' +
+    '<rect ' + a('SKRON_P') + ' x="70" y="110" width="40" height="70"/><rect ' + a('SKRON_L') + ' x="230" y="110" width="40" height="70"/>' +
+    '<rect class="np" x="110" y="110" width="120" height="70" style="fill:var(--card);stroke:var(--line2)"/>' +
+    '<ellipse ' + a('OKO_P') + ' cx="138" cy="143" rx="25" ry="17"/><ellipse ' + a('OKO_L') + ' cx="202" cy="143" rx="25" ry="17"/>' +
+    '<rect ' + a('TWARZ_P') + ' x="70" y="180" width="100" height="105"/><rect ' + a('TWARZ_L') + ' x="170" y="180" width="100" height="105"/></g>' +
+    '<path class="np" d="M170 152 L162 198 L177 198" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/>' +
+    '<path class="np" d="M150 228 Q170 238 190 228" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/>' +
+    '<ellipse class="np" cx="170" cy="160" rx="95" ry="120" fill="none" style="stroke:var(--text)" stroke-width="1.5"/>' +
+    '<text x="30" y="80" text-anchor="middle">P</text><text x="310" y="80" text-anchor="middle">L</text>' +
+    '<text x="170" y="350" text-anchor="middle">przód</text>' +
+    '<rect ' + a('KARK_L') + ' x="470" y="250" width="40" height="70"/><rect ' + a('KARK_P') + ' x="510" y="250" width="40" height="70"/>' +
+    '<ellipse ' + a('UCHO_L') + ' cx="412" cy="160" rx="16" ry="28"/><ellipse ' + a('UCHO_P') + ' cx="608" cy="160" rx="16" ry="28"/>' +
+    '<g clip-path="url(#hb' + u + ')"><rect ' + a('CIEMIE') + ' x="410" y="30" width="200" height="70"/>' +
+    '<rect ' + a('POTYLICA_L') + ' x="410" y="100" width="100" height="180"/><rect ' + a('POTYLICA_P') + ' x="510" y="100" width="100" height="180"/></g>' +
+    '<ellipse class="np" cx="510" cy="155" rx="95" ry="118" fill="none" style="stroke:var(--text)" stroke-width="1.5"/>' +
+    '<text x="370" y="80" text-anchor="middle">L</text><text x="650" y="80" text-anchor="middle">P</text>' +
+    '<text x="510" y="350" text-anchor="middle">tył</text></svg>';
+}
+
+// ------------------------------------------------------------ formularz bólu
+var SYMPT = {
+  nudnosci: 'Nudności', wymioty: 'Wymioty', swiatlowstret: 'Światło przeszkadza', nadwrazliwosc_dzwiek: 'Dźwięki przeszkadzają',
+  nadwrazliwosc_zapach: 'Zapachy przeszkadzają', nasila_ruch: 'Gorzej przy ruchu', przeczulica_skory: 'Boli skóra przy dotyku / czesaniu',
+  lzawienie_oka: 'Łzawi oko', zaczerwienienie_oka: 'Oko zaczerwienione', katar: 'Katar / zatkany nos'
+};
+var TOP = { ojciec: ['przeczulica_skory', 'lzawienie_oka', 'zaczerwienienie_oka', 'katar'], syn: ['nudnosci', 'wymioty', 'swiatlowstret', 'nadwrazliwosc_dzwiek', 'nasila_ruch'] };
+var BLOKI = {
+  ojciec: { main: ['czas', 'poczatek', 'natezenie', 'mapa', 'charakter', 'objawyTop', 'kofeina', 'leki', 'koniec', 'alarm', 'uwagi'], more: ['objawyRest', 'aura', 'wplyw', 'okolicznosci'] },
+  syn: { main: ['czas', 'natezenie', 'mapa', 'charakter', 'aura', 'objawyTop', 'leki', 'koniec', 'wplyw', 'alarm', 'uwagi'], more: ['objawyRest', 'okolicznosci', 'kofeina', 'poczatek'] }
+};
+var ALARM = {
+  wspolne: ['Nagły ból „najsilniejszy w życiu”', 'Niedowład lub zaburzenia mowy', 'Gorączka ze sztywnością karku', 'Nagłe zaburzenia widzenia lub podwójne widzenie'],
+  ojciec: ['Ból żuchwy przy żuciu', 'Zażółcenie skóry lub oczu', 'Ciemny mocz']
+};
+var STEP = { kofeina_ile: { min: 0, max: 15, step: 1, start: 1, unit: '' }, sen_h: { min: 0, max: 14, step: 0.5, start: 7, unit: ' h' } };
+var F = null;
+
+function newEpisode(back) {
+  var d = LS.get('draft', null);
+  if (d && d.isNew && Date.now() - d.ts < 12 * 3600000) {
+    F = { ep: d.ep, isNew: true, restored: true, back: d.back, med: null, delConfirm: false };
+  } else {
+    var now = new Date();
+    F = { ep: { id: uuid(), start_lokalny: localStr(now), start_utc: now.toISOString(), strefa: TZ, natezenie_max: '', lokalizacja: '', leki: [], koniec_lokalny: '', koniec_utc: '' }, isNew: true, back: !!back, med: null, delConfirm: false };
+    if (back) {
+      var y = new Date(now.getTime() - 86400000); y.setHours(20, 0, 0, 0);
+      setStart(y);
+    }
+  }
+  if (!F.back) locate(F.ep);
+  nav('form');
+}
+function editEpisode(id) {
+  var e = cache.epizody.filter(function (x) { return x.id === id; })[0];
+  if (!e) return;
+  F = { ep: JSON.parse(JSON.stringify(e)), isNew: false, med: null, delConfirm: false };
+  nav('form');
+}
+function saveDraft() { if (F && F.isNew) LS.set('draft', { ep: F.ep, isNew: true, back: F.back, ts: Date.now() }); }
+function setStart(d) { F.ep.start_lokalny = localStr(d); F.ep.start_utc = d.toISOString(); F.ep.strefa = TZ; }
+function setEnd(d) {
+  if (!d) { F.ep.koniec_lokalny = ''; F.ep.koniec_utc = ''; return; }
+  F.ep.koniec_lokalny = localStr(d); F.ep.koniec_utc = d.toISOString();
+}
+function locate(ep) {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(function (p) {
+    ep.lat = Math.round(p.coords.latitude * 100) / 100;
+    ep.lon = Math.round(p.coords.longitude * 100) / 100;
+    rerender('czas');
+    fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + ep.lat + '&longitude=' + ep.lon + '&localityLanguage=pl')
+      .then(function (r) { return r.json(); })
+      .then(function (j) { ep.miasto = j.city || j.locality || j.principalSubdivision || ''; rerender('czas'); saveDraft(); })
+      .catch(function () {});
+  }, function () {}, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+}
+
+function chipsSingle(f, opts) {
+  return '<div class="chips">' + opts.map(function (v) {
+    return '<button class="chip' + (F.ep[f] === v ? ' on' : '') + '" data-act="single" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(v.charAt(0).toUpperCase() + v.slice(1)) + '</button>';
+  }).join('') + '</div>';
+}
+function chipsBool(list) {
+  return '<div class="chips">' + list.map(function (f) {
+    return '<button class="chip' + (F.ep[f] === true ? ' on' : '') + '" data-act="bool" data-f="' + f + '">' + esc(SYMPT[f] || f) + '</button>';
+  }).join('') + '</div>';
+}
+function slider(key, val, opts) {
+  opts = opts || {};
+  var v = num(val);
+  return '<div class="sl' + (v === null ? ' unset' : '') + (opts.neutral ? ' neutral' : '') + '" data-sl="' + key + '"><input type="range" min="0" max="10" step="1" value="' + (v === null ? 5 : v) + '" aria-label="' + esc(opts.label || key) + '"></div>' +
+    '<div class="scale"><span>0' + (opts.neutral ? '' : ' brak') + '</span><span>5</span><span>10' + (opts.neutral ? '' : ' najgorszy') + '</span></div>';
+}
+function stepper(f) {
+  var c = STEP[f], v = num(F.ep[f]);
+  return '<div class="stepper"><button data-act="step" data-f="' + f + '" data-d="-1" aria-label="mniej">−</button><span>' + (v === null ? '—' : fmtNum(v) + c.unit) + '</span><button data-act="step" data-f="' + f + '" data-d="1" aria-label="więcej">+</button></div>';
+}
+function agoChips(act, list) {
+  return '<div class="chips" style="margin-top:8px">' + list.map(function (m) {
+    return '<button class="chip ghost" data-act="' + act + '" data-v="' + m + '">' + (m === 0 ? 'Teraz' : m < 60 ? m + ' min temu' : (m / 60) + ' h temu') + '</button>';
+  }).join('') + '</div>';
+}
+function selMap() { var o = {}; String(F.ep.lokalizacja || '').split(';').filter(String).forEach(function (k) { o[k] = true; }); return o; }
+
+var BLOK = {
+  czas: function () {
+    var old = F.ep.start_utc && Date.now() - new Date(F.ep.start_utc).getTime() > 6 * 3600000;
+    var loc = old ? 'pominięta (wpis wstecz)' : (F.ep.miasto ? esc(F.ep.miasto) : (F.ep.lat !== undefined && F.ep.lat !== '' ? 'zapisana' : 'brak'));
+    return '<h3>Kiedy się zaczął?</h3><input type="datetime-local" data-f="start" value="' + esc(inputVal(F.ep.start_lokalny)) + '">' +
+      agoChips('startAgo', [0, 30, 60, 120, 180]) + '<p class="hint" style="margin-top:8px">Lokalizacja (do pogody): ' + loc + '</p>';
+  },
+  poczatek: function () { return '<h3>Jak się zaczął?</h3>' + chipsSingle('poczatek', ['obudził mnie ze snu', 'był już po przebudzeniu', 'zaczął się w ciągu dnia']); },
+  natezenie: function () {
+    var v = num(F.ep.natezenie_max);
+    return '<h3>Jak mocno boli? <span class="val" id="natv">' + (v === null ? '—' : v) + ' <small>' + natWord(v) + '</small></span></h3>' + slider('natezenie_max', v, { label: 'Natężenie bólu' }) +
+      '<div class="err" id="natErr" hidden>Ustaw natężenie: dotknij suwaka.</div>';
+  },
+  mapa: function () {
+    var s = strona(F.ep.lokalizacja);
+    var names = String(F.ep.lokalizacja || '').split(';').filter(String).map(function (k) { return REG[k] || k; }).join(', ');
+    return '<h3>Gdzie boli?</h3><p class="hint">Dotknij obszarów (można kilka). P = Twoja prawa strona, L = lewa. Na rysunku z przodu Twoja prawa strona jest po lewej.</p>' +
+      '<div id="mapa">' + headSvg({ sel: selMap(), inter: true, uid: 'f' }) + '</div>' +
+      '<p style="font-size:15px">' + (names ? esc(names) + ' · <b>' + esc(s) + '</b>' : '<span class="hint">Nic nie zaznaczono</span>') + '</p>' +
+      '<div class="chips"><button class="chip ghost" data-act="mapAll">Cała głowa</button><button class="chip ghost" data-act="mapClear">Wyczyść</button></div>';
+  },
+  charakter: function () { return '<h3>Jaki to ból?</h3>' + chipsSingle('charakter', ['pulsujący', 'uciskowy', 'kłujący', 'piekący', 'napady „jak prąd”']); },
+  aura: function () { return '<h3>Aura przed bólem?</h3>' + chipsSingle('aura', ['brak', 'wzrokowa', 'czuciowa (mrowienie)', 'zaburzenia mowy']); },
+  objawyTop: function () { return '<h3>Objawy</h3>' + chipsBool(TOP[prof()]); },
+  objawyRest: function () {
+    var top = TOP[prof()];
+    return '<h3>Inne objawy</h3>' + chipsBool(Object.keys(SYMPT).filter(function (k) { return top.indexOf(k) < 0; }));
+  },
+  kofeina: function () {
+    return '<h3>Kawa i herbata dziś</h3>' + stepper('kofeina_ile') +
+      '<div class="field"><label>Ostatnia o godzinie</label><input type="time" data-f="kofeina_ostatnia" value="' + esc(F.ep.kofeina_ostatnia || '') + '"></div>';
+  },
+  wplyw: function () {
+    var s = '<h3>Jak funkcjonujesz?</h3>' + chipsSingle('wplyw', ['normalnie', 'trochę ograniczony', 'mocno ograniczony', 'muszę leżeć']);
+    if (prof() === 'syn') s += '<div class="field"><label>Praca</label>' + chipsSingle('praca', ['nie dotyczy', 'pracowałem normalnie', 'pracowałem gorzej', 'nie pracowałem']) + '</div>';
+    return s;
+  },
+  okolicznosci: function () {
+    var st = num(F.ep.stres);
+    return '<h3>Okoliczności</h3><div class="field"><label>Sen ostatniej nocy</label>' + stepper('sen_h') + '</div>' +
+      '<div class="field"><label>Stres w ostatnich 24 h <span class="val" id="stresv" style="font-size:18px">' + (st === null ? '—' : st) + '</span></label>' + slider('stres', st, { neutral: true, label: 'Stres' }) + '</div>' +
+      '<div class="field"><label>W ostatnich 24 h</label><div class="chips">' +
+      [['pominiety_posilek', 'Pominięty posiłek'], ['alkohol', 'Alkohol'], ['wysilek', 'Duży wysiłek']].map(function (x) {
+        return '<button class="chip' + (F.ep[x[0]] === true ? ' on' : '') + '" data-act="bool" data-f="' + x[0] + '">' + x[1] + '</button>';
+      }).join('') + '</div></div>';
+  },
+  leki: function () {
+    var s = '<h3>Leki</h3>';
+    (F.ep.leki || []).forEach(function (l, i) {
+      var nazwa = l.lek || (lekById(l.id_leku) || {}).nazwa || 'Lek';
+      s += '<div class="med"><div class="top"><div><b>' + esc(nazwa) + ' ' + esc(doseTxt(l.dawka, l.jednostka)) + '</b><br><span class="hint">' + esc(hhmm(l.czas_lokalny)) +
+        (num(l.natezenie_przy_przyjeciu) !== null ? ' · przy bólu ' + l.natezenie_przy_przyjeciu + '/10' : '') + '</span></div>' +
+        '<button class="x" data-act="medDel" data-i="' + i + '">Usuń</button></div>' +
+        '<div class="hint" style="margin:6px 0 4px">Efekt po 2 godzinach:</div><div class="chips">' +
+        [['brak', 'Nie pomógł'], ['ulga', 'Ulga'], ['ustąpił', 'Przestało boleć']].map(function (v) {
+          return '<button class="chip' + (l.efekt_2h === v[0] ? ' on' : '') + '" data-act="medEff" data-i="' + i + '" data-v="' + v[0] + '">' + v[1] + '</button>';
+        }).join('') + '</div></div>';
+    });
+    if (!F.med) return s + '<button class="btn sec small" data-act="medOpen">+ Dodaj lek</button>';
+    var m = F.med, lek = lekById(m.id_leku);
+    s += '<div class="panel"><div class="field" style="margin-top:0"><label>Który lek?</label><div class="chips">' + lekiDorazne().map(function (l) {
+      return '<button class="chip' + (m.id_leku === l.id_leku ? ' on' : '') + '" data-act="medPick" data-id="' + esc(l.id_leku) + '">' + esc(l.nazwa) + '</button>';
+    }).join('') + '</div>' + (lekiDorazne().length ? '' : '<p class="hint">Brak leków na liście. Dodaj je w arkuszu (zakładka Slownik_lekow).</p>') + '</div>';
+    if (lek) {
+      s += '<div class="field"><label>Dawka</label><div class="chips">' + String(lek.opcje_dawki).split(';').filter(String).map(function (d) {
+        return '<button class="chip' + (Number(m.dawka) === Number(d) ? ' on' : '') + '" data-act="medDose" data-v="' + esc(d) + '">' + esc(doseTxt(d, lek.jednostka)) + '</button>';
+      }).join('') + '</div></div>';
+    }
+    s += '<div class="field"><label>Kiedy?</label><input type="datetime-local" data-f="medTime" value="' + esc(inputVal(m.czas_lokalny)) + '">' + agoChips('medAgo', [0, 15, 30, 60, 120]) + '</div>';
+    s += '<div class="field"><label>Jak mocno bolało w chwili wzięcia? <span class="val" id="mednatv" style="font-size:18px">' + (num(m.nat) === null ? '—' : m.nat) + '</span></label>' + slider('med_nat', m.nat, { label: 'Natężenie przy leku' }) + '</div>';
+    s += '<div class="err" id="medErr" hidden>Wybierz lek i dawkę.</div><div class="row" style="margin-top:12px"><button class="btn small" data-act="medAdd">Dodaj</button><button class="btn small sec" data-act="medCancel">Anuluj</button></div></div>';
+    return s;
+  },
+  koniec: function () {
+    var done = !!F.ep.koniec_lokalny;
+    var s = '<h3>Czy ból minął?</h3><div class="chips"><button class="chip' + (!done ? ' on' : '') + '" data-act="endState" data-v="0">Nadal boli</button><button class="chip' + (done ? ' on' : '') + '" data-act="endState" data-v="1">Minął</button></div>';
+    if (done) s += '<div class="field"><label>Kiedy minął?</label><input type="datetime-local" data-f="end" value="' + esc(inputVal(F.ep.koniec_lokalny)) + '">' + agoChips('endAgo', [0, 30, 60, 120]) + '</div>';
+    return s;
+  },
+  alarm: function () {
+    var list = ALARM.wspolne.concat(prof() === 'ojciec' ? ALARM.ojciec : []);
+    var on = String(F.ep.objawy_alarmowe || '').split('; ').filter(String);
+    var s = '<h3>Objawy alarmowe</h3><p class="hint">Zaznacz tylko, jeśli wystąpiły.</p><div class="chips">' + list.map(function (v) {
+      return '<button class="chip red' + (on.indexOf(v) >= 0 ? ' on' : '') + '" data-act="alarm" data-v="' + esc(v) + '">' + esc(v) + '</button>';
+    }).join('') + '</div>';
+    if (on.length) s += '<div class="banner red">Te objawy wymagają pilnej pomocy lekarskiej: zadzwoń pod 112 albo jedź na SOR.</div>';
+    return s;
+  },
+  uwagi: function () { return '<h3>Uwagi</h3><textarea data-f="uwagi" placeholder="Np. zmieniłem poduszkę, ból po długiej jeździe…">' + esc(F.ep.uwagi || '') + '</textarea>'; }
+};
+function blk(name) { return '<section class="blk" data-blk="' + name + '">' + BLOK[name]() + '</section>'; }
+function rerender(name) {
+  if (view.name !== 'form') return;
+  var el = $('[data-blk="' + name + '"]');
+  if (el) { el.outerHTML = blk(name); bindSliders(); }
+}
+function vForm() {
+  var b = BLOKI[prof()];
+  var s = header(F.isNew ? (F.back ? 'Wpis wstecz' : 'Boli mnie') : 'Edycja wpisu', 'home');
+  if (F.restored) s += '<div class="banner info">Przywrócono niedokończony wpis. <button class="link" data-act="discardDraft">Zacznij od nowa</button></div>';
+  s += b.main.map(blk).join('');
+  s += '<details class="more"><summary>Więcej szczegółów</summary>' + b.more.map(blk).join('') + '</details>';
+  if (!F.isNew) s += '<p style="text-align:center;margin:18px 0"><button class="link danger-link" data-act="delEp">' + (F.delConfirm ? 'Na pewno usunąć? Dotknij ponownie' : 'Usuń ten wpis') + '</button></p>';
+  s += '<div style="height:70px"></div><div class="savebar"><div class="in"><button class="btn" data-act="saveEp">Zapisz</button></div></div>';
+  return s;
+}
+function afterForm() { bindSliders(); }
+
+function bindSliders() {
+  $$('.sl').forEach(function (w) {
+    if (w._b) return;
+    w._b = true;
+    var inp = $('input', w);
+    function setFromX(x) {
+      var r = inp.getBoundingClientRect();
+      var v = Math.round(Math.max(0, Math.min(1, (x - r.left - 14) / (r.width - 28))) * 10);
+      inp.value = v;
+      sliderChanged(w.dataset.sl, v, w);
+    }
+    var down = false;
+    inp.addEventListener('input', function () { sliderChanged(w.dataset.sl, Number(inp.value), w); });
+    inp.addEventListener('pointerdown', function (e) { down = true; e.preventDefault(); try { inp.setPointerCapture(e.pointerId); } catch (x) {} setFromX(e.clientX); });
+    inp.addEventListener('pointermove', function (e) { if (down) setFromX(e.clientX); });
+    inp.addEventListener('pointerup', function () { down = false; });
+    inp.addEventListener('pointercancel', function () { down = false; });
+  });
+}
+function sliderChanged(key, v, w) {
+  w.classList.remove('unset');
+  if (key === 'natezenie_max') {
+    F.ep.natezenie_max = v;
+    $('#natv').innerHTML = v + ' <small>' + natWord(v) + '</small>';
+    var e = $('#natErr'); if (e) e.hidden = true;
+  } else if (key === 'stres') {
+    F.ep.stres = v; $('#stresv').textContent = v;
+  } else if (key === 'med_nat' && F.med) {
+    F.med.nat = v; $('#mednatv').textContent = v;
+  } else if (key === 'close_nat' && C) {
+    C.ep.natezenie_max = v; $('#closenatv').textContent = v;
+  }
+  saveDraft();
+}
+
+function saveEpisode() {
+  var ep = F.ep;
+  if (num(ep.natezenie_max) === null) {
+    var e = $('#natErr'); if (e) { e.hidden = false; e.parentNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
+  var main = BLOKI[prof()].main;
+  var visibleBools = [];
+  if (main.indexOf('objawyTop') >= 0) visibleBools = visibleBools.concat(TOP[prof()]);
+  Object.keys(SYMPT).concat(['pominiety_posilek', 'alkohol', 'wysilek']).forEach(function (k) {
+    if (ep[k] !== true) ep[k] = visibleBools.indexOf(k) >= 0 ? false : '';
+  });
+  if (ep.start_utc && Date.now() - new Date(ep.start_utc).getTime() > 6 * 3600000 && F.isNew) { ep.lat = ''; ep.lon = ''; ep.miasto = ''; }
+  var st = epStart(ep), en = epEnd(ep);
+  if (st && en && en < st) { toast('Koniec bólu jest przed początkiem. Popraw godzinę.'); return; }
+  queue('saveEpisode', JSON.parse(JSON.stringify(ep)));
+  LS.del('draft');
+  F = null;
+  toast('Zapisano');
+  nav('home');
+}
+
+// ------------------------------------------------------------ ekran: zakończenie bólu
+var C = null;
+function vClose() {
+  var ep = C.ep;
+  var s = header('Przestało boleć', 'home');
+  s += '<div class="blk"><h3>Kiedy minął?</h3><input type="datetime-local" data-f="closeEnd" value="' + esc(inputVal(ep.koniec_lokalny)) + '">' + agoChips('closeAgo', [0, 30, 60, 120]) + '</div>';
+  (ep.leki || []).forEach(function (l, i) {
+    s += '<div class="blk"><h3>' + esc(l.lek || (lekById(l.id_leku) || {}).nazwa || 'Lek') + ' ' + esc(doseTxt(l.dawka, l.jednostka)) + ' (' + esc(hhmm(l.czas_lokalny)) + ')</h3><p class="hint">Jak było 2 godziny po leku?</p><div class="chips">' +
+      [['brak', 'Nie pomógł'], ['ulga', 'Ulga'], ['ustąpił', 'Przestało boleć']].map(function (v) {
+        return '<button class="chip' + (l.efekt_2h === v[0] ? ' on' : '') + '" data-act="closeEff" data-i="' + i + '" data-v="' + v[0] + '">' + v[1] + '</button>';
+      }).join('') + '</div></div>';
+  });
+  var v = num(ep.natezenie_max);
+  s += '<div class="blk"><h3>Najsilniejszy ból w tym ataku <span class="val" id="closenatv">' + (v === null ? '—' : v) + '</span></h3>' + slider('close_nat', v) + '</div>';
+  s += '<div style="height:70px"></div><div class="savebar"><div class="in"><button class="btn" data-act="closeSave">Zapisz</button></div></div>';
+  setTimeout(bindSliders, 0);
+  return s;
+}
+
+// ------------------------------------------------------------ ekran: historia
+function vHistory() {
+  var list = cache.epizody.slice().sort(function (a, b) { return String(b.start_lokalny).localeCompare(a.start_lokalny); });
+  var s = '<h1>Historia</h1>' + statusHtml();
+  if (!list.length) s += '<div class="card hint">Brak wpisów. Dni bez wpisu liczą się jako dni bez bólu.</div>';
+  var mies = '';
+  var buf = '';
+  list.forEach(function (e) {
+    var k = String(e.start_lokalny).slice(0, 7);
+    if (k !== mies) {
+      if (buf) s += '<div class="card">' + buf + '</div>';
+      var p = k.split('-');
+      s += '<h3 style="margin:18px 4px 0">' + MIES[+p[1] - 1] + ' ' + p[0] + '</h3>';
+      mies = k; buf = '';
+    }
+    buf += epRow(e);
+  });
+  if (buf) s += '<div class="card">' + buf + '</div>';
+  if (cache.osoba.pokaz_cisnienie && cache.cisnienie.length) {
+    s += '<h3 style="margin:18px 4px 0">Ciśnienie</h3><div class="card"><table><tr><th>Kiedy</th><th class="num">Ciśnienie</th><th class="num">Tętno</th><th></th></tr>' +
+      cache.cisnienie.slice().sort(function (a, b) { return String(b.czas_lokalny).localeCompare(a.czas_lokalny); }).slice(0, 30).map(function (c) {
+        return '<tr><td>' + esc(fmtDay(String(c.czas_lokalny).slice(0, 10))) + ' ' + esc(hhmm(c.czas_lokalny)) + '<br><span class="hint">' + esc(c.kontekst) + '</span></td><td class="num">' + esc(c.skurczowe) + '/' + esc(c.rozkurczowe) + '</td><td class="num">' + esc(c.tetno) + '</td>' +
+          '<td class="num"><button class="x link danger-link" data-act="delBp" data-id="' + esc(c.id) + '">usuń</button></td></tr>';
+      }).join('') + '</table></div>';
+  }
+  return s;
+}
+
+// ------------------------------------------------------------ ekran: ciśnienie
+var B = null;
+function vBp() {
+  if (!B) { var n = new Date(); B = { id: uuid(), czas_lokalny: localStr(n), czas_utc: n.toISOString(), strefa: TZ, kontekst: n.getHours() < 11 ? 'po przebudzeniu, przed lekami' : '', skurczowe: '', rozkurczowe: '', tetno: '', uwagi: '' }; }
+  var s = header('Ciśnienie', 'home');
+  s += '<div class="blk"><h3>Kiedy?</h3><input type="datetime-local" data-f="bpTime" value="' + esc(inputVal(B.czas_lokalny)) + '">' + agoChips('bpAgo', [0, 15, 30, 60]) + '</div>';
+  s += '<div class="blk"><h3>Sytuacja</h3><div class="chips">' + ['po przebudzeniu, przed lekami', 'wieczorem', 'w czasie bólu', 'inna'].map(function (v) {
+    return '<button class="chip' + (B.kontekst === v ? ' on' : '') + '" data-act="bpCtx" data-v="' + esc(v) + '">' + esc(v.charAt(0).toUpperCase() + v.slice(1)) + '</button>';
+  }).join('') + '</div></div>';
+  s += '<div class="blk"><div class="row"><div class="field" style="margin:0"><label>Górne (skurczowe)</label><input type="number" inputmode="numeric" data-f="skurczowe" value="' + esc(B.skurczowe) + '" placeholder="130"></div>' +
+    '<div class="field" style="margin:0"><label>Dolne (rozkurczowe)</label><input type="number" inputmode="numeric" data-f="rozkurczowe" value="' + esc(B.rozkurczowe) + '" placeholder="80"></div></div>' +
+    '<div class="field"><label>Tętno</label><input type="number" inputmode="numeric" data-f="tetno" value="' + esc(B.tetno) + '" placeholder="70"></div>' +
+    '<div class="err" id="bpErr" hidden></div></div>';
+  s += '<div class="blk"><h3>Uwagi</h3><textarea data-f="bpUwagi">' + esc(B.uwagi) + '</textarea></div>';
+  s += '<div style="height:70px"></div><div class="savebar"><div class="in"><button class="btn" data-act="bpSave">Zapisz pomiar</button></div></div>';
+  return s;
+}
+
+// ------------------------------------------------------------ ekran: zmiana leczenia
+var E = null;
+var TYPY = ['lek stały – start', 'lek stały – zmiana dawki', 'lek stały – stop', 'nowy lek doraźny', 'zabieg', 'badanie', 'infekcja', 'szczepienie', 'zmiana snu / poduszki', 'inne'];
+function vEvent() {
+  if (!E) E = { id: uuid(), data: todayKey(), typ: '', id_leku: '', dawka: '', szczegoly: '' };
+  var s = header('Zmiana leczenia lub zdarzenie', 'more');
+  s += '<div class="blk"><h3>Co się zmieniło?</h3><div class="chips">' + TYPY.map(function (v) {
+    return '<button class="chip' + (E.typ === v ? ' on' : '') + '" data-act="evType" data-v="' + esc(v) + '">' + esc(v.charAt(0).toUpperCase() + v.slice(1)) + '</button>';
+  }).join('') + '</div></div>';
+  s += '<div class="blk"><h3>Kiedy?</h3><input type="date" data-f="evDate" value="' + esc(E.data) + '"></div>';
+  s += '<div class="blk"><h3>Którego leku dotyczy?</h3><div class="chips"><button class="chip' + (!E.id_leku ? ' on' : '') + '" data-act="evLek" data-v="">Żadnego</button>' + (cache.leki || []).map(function (l) {
+    return '<button class="chip' + (E.id_leku === l.id_leku ? ' on' : '') + '" data-act="evLek" data-v="' + esc(l.id_leku) + '">' + esc(l.nazwa) + '</button>';
+  }).join('') + '</div><div class="field"><label>Dawka (np. „½–0–½” albo „200 mg 2× dziennie”)</label><input type="text" data-f="evDawka" value="' + esc(E.dawka) + '"></div></div>';
+  s += '<div class="blk"><h3>Szczegóły</h3><textarea data-f="evSz" placeholder="Np. blokada nerwu potylicznego bez sterydu">' + esc(E.szczegoly) + '</textarea></div>';
+  s += '<div class="err" id="evErr" hidden>Wybierz, co się zmieniło.</div><div style="height:70px"></div><div class="savebar"><div class="in"><button class="btn" data-act="evSave">Zapisz</button></div></div>';
+  return s;
+}
+
+// ------------------------------------------------------------ ekran: więcej
+function vMore() {
+  var o = cache.osoba;
+  var s = '<h1>Więcej</h1>' + statusHtml();
+  s += '<div class="card"><button class="btn sec small" data-act="go" data-to="event">+ Zmiana leczenia lub zdarzenie</button>' +
+    (o.pokaz_cisnienie ? '<p></p><button class="btn sec small" data-act="go" data-to="bp">+ Pomiar ciśnienia</button>' : '') +
+    '<p></p><button class="btn sec small" data-act="go" data-to="meds">Moja lista leków</button></div>';
+  var ev = (cache.zmiany || []).slice().sort(function (a, b) { return String(b.data).localeCompare(a.data); });
+  s += '<div class="card"><h3>Oś zdarzeń</h3>' + (ev.length ? '<table>' + ev.map(function (z) {
+    return '<tr><td style="white-space:nowrap">' + esc(z.data) + '</td><td><b>' + esc(z.typ) + '</b>' + (z.lek ? ' · ' + esc(z.lek) : '') + (z.dawka ? ' · ' + esc(z.dawka) : '') + '<br><span class="hint">' + esc(z.szczegoly) + '</span></td><td class="num"><button class="link danger-link" data-act="delEv" data-id="' + esc(z.id) + '">usuń</button></td></tr>';
+  }).join('') + '</table>' : '<p class="hint">Brak zdarzeń.</p>') + '</div>';
+  s += '<div class="card"><h3>Telefon</h3><p class="hint">Połączono jako: ' + esc(o.imie) + '. Wersja aplikacji ' + WERSJA_APP + '.</p>' +
+    '<button class="btn sec small" data-act="sync">Synchronizuj teraz</button><p></p>' +
+    '<button class="link danger-link" data-act="unlink">' + (view.unlinkConfirm ? 'Na pewno odłączyć? Dotknij ponownie' : 'Odłącz ten telefon od arkusza') + '</button></div>';
+  return s;
+}
+function vMeds() {
+  var s = header('Moja lista leków', 'more');
+  var grupy = { 'doraźny': 'Doraźne (przy bólu)', 'stały': 'Stałe', 'profilaktyczny': 'Profilaktyczne' };
+  Object.keys(grupy).forEach(function (r) {
+    var l = (cache.leki || []).filter(function (x) { return x.rola === r; });
+    if (!l.length) return;
+    s += '<div class="card"><h3>' + grupy[r] + '</h3><table>' + l.map(function (x) {
+      return '<tr><td><b>' + esc(x.nazwa) + '</b><br><span class="hint">' + esc(x.sklad) + (x.uwagi ? ' · ' + esc(x.uwagi) : '') + '</span></td><td class="num hint">' + esc(x.kategoria_moh === 'nie dotyczy' ? '' : x.kategoria_moh) + '</td></tr>';
+    }).join('') + '</table></div>';
+  });
+  s += '<p class="hint">Leki dodaje się i zmienia w arkuszu, w zakładce Slownik_lekow. Zmiany pojawią się tu po synchronizacji.</p>';
+  return s;
+}
+
+// ------------------------------------------------------------ statystyki
+function dayMap() {
+  var m = {};
+  function g(k) { return m[k] || (m[k] = { max: null, n: 0, meds: [], tryp: false, zl: false, pr: false, para: 0 }); }
+  cache.epizody.forEach(function (e) {
+    var s = String(e.start_lokalny).slice(0, 10);
+    if (!s) return;
+    var en = String(e.koniec_lokalny || '').slice(0, 10) || s;
+    var d = s, guard = 0;
+    while (d <= en && guard++ < 14) {
+      var x = g(d);
+      if (d === s) x.n++;
+      var n = num(e.natezenie_max);
+      if (n !== null && (x.max === null || n > x.max)) x.max = n;
+      if (x.max === null) x.max = 0;
+      d = addDays(d, 1);
+    }
+    (e.leki || []).forEach(function (l) {
+      var k = String(l.czas_lokalny).slice(0, 10);
+      if (!k) return;
+      var x = g(k);
+      x.meds.push(l);
+      var lek = lekById(l.id_leku) || {};
+      var cat = String(l.kategoria_moh || lek.kategoria_moh || '');
+      if (cat === 'tryptan') x.tryp = true; else if (cat.indexOf('złożony') === 0 || cat === 'opioid') x.zl = true; else if (cat === 'prosty') x.pr = true;
+      x.para += num(l.paracetamol_mg) !== null && l.paracetamol_mg !== '' ? Number(l.paracetamol_mg) : (Number(l.dawka) || 0) * (Number(lek.paracetamol_mg_na_jednostke) || 0);
+    });
+  });
+  return m;
+}
+function mohStats() {
+  var m = dayMap(), t = todayKey(), ten = 0, simple = 0, any = 0;
+  for (var i = 0; i < 30; i++) {
+    var x = m[addDays(t, -i)];
+    if (!x) continue;
+    if (x.tryp || x.zl) ten++;
+    if (x.pr) simple++;
+    if (x.meds.length) any++;
+  }
+  return { ten: ten, simple: simple, any: any };
+}
+function rangeStats(N) {
+  var m = dayMap(), t = todayKey(), pain = 0, med = 0, sum = 0, cnt = 0;
+  for (var i = 0; i < N; i++) {
+    var x = m[addDays(t, -i)];
+    if (!x) continue;
+    if (x.max !== null) { pain++; sum += x.max; cnt++; }
+    if (x.meds.length) med++;
+  }
+  return { painDays: pain, medDays: med, avg: cnt ? sum / cnt : null, map: m };
+}
+function barsSvg(labels, series, o) {
+  o = o || {};
+  var W = 340, H = o.h || 150, L = 24, B = 20, T = 8;
+  var max = 0;
+  series.forEach(function (s) { s.values.forEach(function (v) { if (v > max) max = v; }); });
+  if (o.line && o.line > max) max = o.line;
+  max = Math.max(1, max);
+  var nice = max <= 4 ? 4 : max <= 6 ? 6 : max <= 10 ? 10 : max <= 20 ? 20 : Math.ceil(max / 10) * 10;
+  var y = function (v) { return T + (H - T - B) * (1 - v / nice); };
+  var gw = (W - L) / labels.length, ns = series.length, bw = Math.max(3, (gw - 4 - (ns - 1) * 2) / ns);
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="' + esc(o.aria || 'wykres') + '">';
+  [0, nice / 2, nice].forEach(function (v) {
+    s += '<line x1="' + L + '" x2="' + W + '" y1="' + y(v) + '" y2="' + y(v) + '" style="stroke:var(--line)" stroke-width="1"/><text x="' + (L - 5) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '</text>';
+  });
+  if (o.line) s += '<line x1="' + L + '" x2="' + W + '" y1="' + y(o.line) + '" y2="' + y(o.line) + '" style="stroke:var(--danger)" stroke-dasharray="4 3" stroke-width="1"/><text x="' + W + '" y="' + (y(o.line) + 13) + '" text-anchor="end" style="fill:var(--danger)">' + esc(o.lineLabel || '') + '</text>';
+  labels.forEach(function (lab, i) {
+    var gx = L + i * gw + 2;
+    series.forEach(function (se, j) {
+      var v = se.values[i] || 0, x = gx + j * (bw + 2), yy = y(v), h = (H - B) - yy;
+      var tip = (o.tips ? o.tips[i] : lab) + ': ' + se.name + ' ' + v;
+      s += '<rect x="' + x + '" y="' + (h > 0 ? yy : H - B - 1) + '" width="' + bw + '" height="' + Math.max(1, h) + '" rx="2" style="fill:' + se.color + '"' + (h > 0 ? '' : ' opacity=".35"') + '/>';
+      s += '<rect x="' + (gx - 2) + '" y="' + T + '" width="' + gw + '" height="' + (H - T) + '" fill="transparent" data-tip="' + esc(o.tips ? o.tips[i] + ': ' + series.map(function (q) { return q.name + ' ' + (q.values[i] || 0); }).join(', ') : tip) + '"/>';
+    });
+    if (!o.every || i % o.every === 0) s += '<text x="' + (gx + gw / 2 - 2) + '" y="' + (H - 5) + '" text-anchor="middle">' + esc(lab) + '</text>';
+  });
+  return s + '</svg>';
+}
+function legend(items) { return '<div class="legend">' + items.map(function (i) { return '<span><i style="background:' + i[1] + '"></i>' + esc(i[0]) + '</span>'; }).join('') + '</div>'; }
+function chart(title, inner, note) { return '<div class="card chart"><h3>' + esc(title) + '</h3>' + inner + '<div class="tip hint">' + esc(note || 'Dotknij wykresu, żeby zobaczyć szczegóły.') + '</div></div>'; }
+
+function vStats() {
+  var N = view.period || 30;
+  var t = todayKey(), start = addDays(t, -(N - 1));
+  var st = rangeStats(N), m = st.map;
+  var eps = cache.epizody.filter(function (e) { var k = String(e.start_lokalny).slice(0, 10); return k >= start && k <= t; });
+  var p = prof();
+  var s = '<h1>Statystyki</h1>' + statusHtml();
+  s += '<div class="chips">' + [[7, '7 dni'], [30, '30 dni'], [90, '3 miesiące'], [365, 'Rok']].map(function (x) {
+    return '<button class="chip' + (N === x[0] ? ' on' : '') + '" data-act="period" data-v="' + x[0] + '">' + x[1] + '</button>';
+  }).join('') + '</div>';
+
+  var closed = eps.filter(function (e) { return epStart(e) && epEnd(e); });
+  var avgDur = closed.length ? closed.reduce(function (a, e) { return a + (epEnd(e) - epStart(e)) / 3600000; }, 0) / closed.length : null;
+  s += '<div class="tiles">' +
+    '<div class="tile"><div class="n">' + st.painDays + ' <small class="hint" style="font-size:15px">z ' + N + '</small></div><div class="l">dni z bólem</div></div>' +
+    '<div class="tile"><div class="n">' + st.medDays + '</div><div class="l">dni z lekiem doraźnym</div></div>' +
+    '<div class="tile"><div class="n">' + (st.avg === null ? '–' : fmtNum(st.avg)) + '</div><div class="l">średnie natężenie (dni z bólem)</div></div>' +
+    '<div class="tile"><div class="n">' + (avgDur === null ? '–' : fmtDur(avgDur)) + '</div><div class="l">średni czas ataku</div></div>';
+  if (p === 'ojciec' && eps.length) {
+    var wake = eps.filter(function (e) { return e.poczatek === 'obudził mnie ze snu'; }).length;
+    var morn = eps.filter(function (e) { var h = Number(String(e.start_lokalny).slice(11, 13)); return h >= 3 && h < 9; }).length;
+    s += '<div class="tile"><div class="n">' + Math.round(100 * wake / eps.length) + '%</div><div class="l">ataków budzi ze snu</div></div>' +
+      '<div class="tile"><div class="n">' + Math.round(100 * morn / eps.length) + '%</div><div class="l">zaczyna się 3:00–9:00</div></div>';
+  }
+  s += '</div>';
+
+  var moh = mohStats();
+  s += '<div class="card"><h3>Dni z lekami: ostatnie 30 dni</h3>' +
+    '<div style="font-size:15px">Tryptany, leki złożone, opioidy: <b>' + moh.ten + '</b> / próg 10</div><div class="bar' + (moh.ten >= 10 ? ' hot' : '') + '"><i style="width:' + Math.min(100, moh.ten * 10) + '%"></i></div>' +
+    '<div style="font-size:15px">Proste przeciwbólowe: <b>' + moh.simple + '</b> / próg 15</div><div class="bar' + (moh.simple >= 15 ? ' hot' : '') + '"><i style="width:' + Math.min(100, moh.simple / 15 * 100) + '%"></i></div>' +
+    '<div style="font-size:15px">Łącznie dni z jakimkolwiek lekiem doraźnym: <b>' + moh.any + '</b></div>' +
+    '<p class="hint">Progi bólu głowy z nadużywania leków według ICHD-3 (gdy trwa to ponad 3 miesiące). Solpadeine Max liczy się jako lek złożony. To informacja do rozmowy z lekarzem.</p></div>';
+
+  var maxPara = 0, maxParaDay = '', overDays = 0, lim = cache.osoba.limit_paracetamolu || 0;
+  for (var i = 0; i < N; i++) { var k = addDays(t, -i), x = m[k]; if (x && x.para > 0) { if (x.para > maxPara) { maxPara = x.para; maxParaDay = k; } if (lim && x.para > lim) overDays++; } }
+  if (maxPara > 0) {
+    s += '<div class="card"><h3>Paracetamol</h3><p>Najwięcej w ciągu doby: <b>' + maxPara + ' mg</b> (' + esc(fmtDay(maxParaDay)) + ').</p>' +
+      (lim ? '<p>Limit od lekarza: ' + lim + ' mg/dobę. Dni powyżej limitu: <b>' + overDays + '</b>.</p>' : '<p class="hint">Limit dobowy można wpisać w arkuszu (zakładka Osoby, kolumna limit_paracetamolu_mg_doba). Ustala go lekarz.</p>') + '</div>';
+  }
+
+  s += chart('Kalendarz', heatmap(N, m), 'Dotknij dnia, żeby zobaczyć szczegóły.');
+
+  var mon = [], painM = [], medM = [], tipsM = [];
+  var now = new Date();
+  for (var j = 11; j >= 0; j--) {
+    var dd = new Date(now.getFullYear(), now.getMonth() - j, 1);
+    var key = dd.getFullYear() + '-' + pad(dd.getMonth() + 1);
+    mon.push(MIES[dd.getMonth()].slice(0, 3)); tipsM.push(MIES[dd.getMonth()] + ' ' + dd.getFullYear());
+    var pc = 0, mc = 0;
+    Object.keys(m).forEach(function (k2) { if (k2.slice(0, 7) === key) { if (m[k2].max !== null) pc++; if (m[k2].meds.length) mc++; } });
+    painM.push(pc); medM.push(mc);
+  }
+  s += chart('Ostatnie 12 miesięcy', legend([['dni z bólem', 'var(--s1)'], ['dni z lekiem', 'var(--s2)']]) +
+    barsSvg(mon, [{ name: 'dni z bólem', color: 'var(--s1)', values: painM }, { name: 'dni z lekiem', color: 'var(--s2)', values: medM }], { tips: tipsM, line: 10, lineLabel: '10 dni', aria: 'Dni z bólem i z lekiem w miesiącach' }));
+
+  if (eps.length) {
+    var hrs = [], hv = [], ht = [];
+    for (var b = 0; b < 12; b++) { hrs.push(b % 2 === 0 ? String(b * 2) : ''); hv.push(0); ht.push(pad(b * 2) + ':00–' + pad(b * 2 + 1) + ':59'); }
+    eps.forEach(function (e) { var h = Number(String(e.start_lokalny).slice(11, 13)); if (!isNaN(h)) hv[Math.floor(h / 2)]++; });
+    s += chart('O której zaczyna się ból', barsSvg(hrs, [{ name: 'ataki', color: 'var(--s1)', values: hv }], { tips: ht, h: 130, aria: 'Godzina początku bólu' }));
+
+    var cnt = {}, mx = 0;
+    eps.forEach(function (e) { String(e.lokalizacja || '').split(';').filter(String).forEach(function (k3) { cnt[k3] = (cnt[k3] || 0) + 1; if (cnt[k3] > mx) mx = cnt[k3]; }); });
+    if (mx) {
+      var fill = {}, tips = {};
+      Object.keys(REG).forEach(function (k3) {
+        var c = cnt[k3] || 0;
+        tips[k3] = REG[k3] + ': ' + c + ' z ' + eps.length + ' ataków';
+        if (c) fill[k3] = c / mx > 0.75 ? 'var(--h4)' : c / mx > 0.5 ? 'var(--h3)' : c / mx > 0.25 ? 'var(--h2)' : 'var(--h1)';
+      });
+      var sides = {};
+      eps.forEach(function (e) { var sd = strona(e.lokalizacja); if (sd) sides[sd] = (sides[sd] || 0) + 1; });
+      s += chart('Gdzie boli najczęściej', headSvg({ fill: fill, tips: tips, uid: 's' }) +
+        '<p class="hint">' + Object.keys(sides).map(function (k4) { return k4 + ': ' + sides[k4]; }).join(' · ') + '</p>');
+    }
+
+    var meds = {};
+    eps.forEach(function (e) {
+      (e.leki || []).forEach(function (l) {
+        var lek = lekById(l.id_leku) || {};
+        var name = (l.lek || lek.nazwa || 'Lek') + ' ' + doseTxt(l.dawka, l.jednostka || lek.jednostka);
+        var g2 = meds[name] || (meds[name] = { n: 0, ev: 0, ok: 0, rel: 0 });
+        g2.n++;
+        if (l.efekt_2h) { g2.ev++; if (l.efekt_2h === 'ustąpił') g2.ok++; if (l.efekt_2h !== 'brak') g2.rel++; }
+      });
+    });
+    var names = Object.keys(meds);
+    if (names.length) {
+      s += '<div class="card"><h3>Jak działają leki (po 2 h)</h3><table><tr><th>Lek</th><th class="num">Razy</th><th class="num">Ulga lub ustąpił</th><th class="num">Ustąpił</th></tr>' +
+        names.sort(function (a, b2) { return meds[b2].n - meds[a].n; }).map(function (k5) {
+          var g3 = meds[k5];
+          return '<tr><td>' + esc(k5) + '</td><td class="num">' + g3.n + '</td><td class="num">' + (g3.ev ? Math.round(100 * g3.rel / g3.ev) + '%' : '–') + '</td><td class="num">' + (g3.ev ? Math.round(100 * g3.ok / g3.ev) + '%' : '–') + '</td></tr>';
+        }).join('') + '</table><p class="hint">Procenty liczone z przyjęć, przy których wpisano efekt.</p></div>';
+    }
+
+    var tr = { a: [0, 0], b: [0, 0], c: [0, 0] }, anyTr = false;
+    eps.forEach(function (e) {
+      (e.leki || []).forEach(function (l) {
+        var lek = lekById(l.id_leku) || {};
+        if ((l.kategoria_moh || lek.kategoria_moh) !== 'tryptan' || !l.efekt_2h) return;
+        var nn = num(l.natezenie_przy_przyjeciu);
+        if (nn === null) return;
+        anyTr = true;
+        var bk = nn <= 3 ? 'a' : nn <= 6 ? 'b' : 'c';
+        tr[bk][0]++; if (l.efekt_2h === 'ustąpił') tr[bk][1]++;
+      });
+    });
+    if (anyTr) {
+      s += '<div class="card"><h3>Tryptan a moment przyjęcia</h3><table><tr><th>Ból w chwili wzięcia</th><th class="num">Razy</th><th class="num">Ustąpił po 2 h</th></tr>' +
+        [['a', 'łagodny (0–3)'], ['b', 'umiarkowany (4–6)'], ['c', 'silny (7–10)']].map(function (r) {
+          return '<tr><td>' + r[1] + '</td><td class="num">' + tr[r[0]][0] + '</td><td class="num">' + (tr[r[0]][0] ? Math.round(100 * tr[r[0]][1] / tr[r[0]][0]) + '%' : '–') + '</td></tr>';
+        }).join('') + '</table></div>';
+    }
+
+    var home = cache.osoba.strefa_domowa;
+    var fac = [
+      ['Pominięty posiłek', function (e) { return e.pominiety_posilek === true; }],
+      ['Alkohol', function (e) { return e.alkohol === true; }],
+      ['Duży wysiłek', function (e) { return e.wysilek === true; }],
+      ['Stres 7 lub więcej', function (e) { return num(e.stres) !== null && Number(e.stres) >= 7; }],
+      ['Sen poniżej 6 h', function (e) { return num(e.sen_h) !== null && Number(e.sen_h) < 6; }],
+      ['Poza domową strefą czasową', function (e) { return e.strefa && home && e.strefa !== home; }],
+      ['Spadek ciśnienia atm. o 5 hPa lub więcej (24 h)', function (e) { return num(e.zmiana_cisn_24h_hpa) !== null && Number(e.zmiana_cisn_24h_hpa) <= -5; }],
+      ['Wzrost ciśnienia atm. o 5 hPa lub więcej (24 h)', function (e) { return num(e.zmiana_cisn_24h_hpa) !== null && Number(e.zmiana_cisn_24h_hpa) >= 5; }]
+    ];
+    var rows = fac.map(function (f) { return [f[0], eps.filter(f[1]).length]; }).filter(function (r) { return r[1] > 0; });
+    if (rows.length) {
+      s += '<div class="card"><h3>Okoliczności ataków</h3><table>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td class="num">' + r[1] + ' z ' + eps.length + '</td></tr>'; }).join('') +
+        '</table><p class="hint">To jeszcze nie analiza przyczyn. Do porównań potrzeba kilku miesięcy danych.</p></div>';
+    }
+  } else {
+    s += '<div class="card hint">W tym okresie nie ma wpisów o bólu.</div>';
+  }
+
+  var bp = (cache.cisnienie || []).filter(function (c) { var k6 = String(c.czas_lokalny).slice(0, 10); return k6 >= start && num(c.skurczowe) !== null; })
+    .sort(function (a, b3) { return String(a.czas_lokalny).localeCompare(b3.czas_lokalny); });
+  if (bp.length) s += chart('Ciśnienie tętnicze', legend([['górne', 'var(--s1)'], ['dolne', 'var(--s2)']]) + bpSvg(bp));
+
+  var ev = (cache.zmiany || []).filter(function (z) { return z.data >= start; }).sort(function (a, b4) { return String(b4.data).localeCompare(a.data); });
+  if (ev.length) s += '<div class="card"><h3>Zdarzenia w tym okresie</h3><table>' + ev.map(function (z) {
+    return '<tr><td style="white-space:nowrap">' + esc(z.data) + '</td><td>' + esc(z.typ) + (z.lek ? ' · ' + esc(z.lek) : '') + '<br><span class="hint">' + esc(z.szczegoly) + '</span></td></tr>';
+  }).join('') + '</table></div>';
+  return s;
+}
+function heatmap(N, m) {
+  var t = todayKey(), start = addDays(t, -(N - 1));
+  var off = (dow(start) + 6) % 7;
+  var cols = Math.ceil((off + N) / 7);
+  var W = 340, Lw = 22, cell = Math.min(30, Math.floor((W - Lw) / cols)), gap = cell > 10 ? 3 : 1;
+  var H = cell * 7 + 4;
+  var ds = cache.osoba.data_startu || '';
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Kalendarz bólu">';
+  ['pn', '', 'śr', '', 'pt', '', 'nd'].forEach(function (d, i) { if (d) s += '<text x="0" y="' + (i * cell + cell / 2 + 4) + '">' + d + '</text>'; });
+  for (var i = 0; i < N; i++) {
+    var k = addDays(start, i), pos = off + i, c = Math.floor(pos / 7), r = pos % 7;
+    var x = m[k], n = x ? x.max : null;
+    var before = ds && k < ds && !x;
+    var tip = fmtDay(k) + ': ' + (before ? 'przed startem dzienniczka' : (n !== null ? 'ból ' + n + '/10' : 'bez bólu')) + (x && x.meds.length ? '; leki: ' + x.meds.map(function (l) { return (l.lek || (lekById(l.id_leku) || {}).nazwa || '') + ' ' + doseTxt(l.dawka, l.jednostka); }).join(', ') : '');
+    var cx = Lw + c * cell, cy = r * cell;
+    s += '<rect x="' + cx + '" y="' + cy + '" width="' + (cell - gap) + '" height="' + (cell - gap) + '" rx="' + (cell > 12 ? 4 : 1) + '" style="fill:' + natColor(n) + '"' + (before ? ' opacity=".35"' : '') + ' data-tip="' + esc(tip) + '"/>';
+    if (x && x.meds.length) s += '<circle class="np" cx="' + (cx + (cell - gap) / 2) + '" cy="' + (cy + (cell - gap) / 2) + '" r="' + Math.max(1.5, cell / 9) + '" style="fill:' + (n !== null && n >= 7 ? '#fff' : 'var(--text)') + '"/>';
+    if (k === t) s += '<rect class="np" x="' + (cx - 1) + '" y="' + (cy - 1) + '" width="' + (cell - gap + 2) + '" height="' + (cell - gap + 2) + '" rx="' + (cell > 12 ? 5 : 1) + '" fill="none" style="stroke:var(--text)" stroke-width="1.5"/>';
+  }
+  s += '</svg>';
+  return legend([['bez bólu', 'var(--chip)'], ['1–3', 'var(--h1)'], ['4–6', 'var(--h2)'], ['7–8', 'var(--h3)'], ['9–10', 'var(--h4)']]) + s + '<div class="legend"><span>● = dzień z lekiem</span></div>';
+}
+function bpSvg(bp) {
+  var W = 340, H = 150, L = 30, B = 20, T = 8;
+  var lo = 40, hi = 200;
+  bp.forEach(function (c) { hi = Math.max(hi, Number(c.skurczowe) + 10); lo = Math.min(lo, Number(c.rozkurczowe) - 10); });
+  var x = function (i) { return bp.length === 1 ? (L + W) / 2 : L + 8 + (W - L - 16) * i / (bp.length - 1); };
+  var y = function (v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); };
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Ciśnienie">';
+  [80, 120, 140].forEach(function (v) { s += '<line x1="' + L + '" x2="' + W + '" y1="' + y(v) + '" y2="' + y(v) + '" style="stroke:var(--line)"/><text x="' + (L - 5) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '</text>'; });
+  [['skurczowe', 'var(--s1)'], ['rozkurczowe', 'var(--s2)']].forEach(function (se) {
+    s += '<polyline fill="none" stroke-width="2" style="stroke:' + se[1] + '" points="' + bp.map(function (c, i) { return x(i) + ',' + y(Number(c[se[0]])); }).join(' ') + '"/>';
+    bp.forEach(function (c, i) {
+      s += '<circle cx="' + x(i) + '" cy="' + y(Number(c[se[0]])) + '" r="4" style="fill:' + se[1] + ';stroke:var(--card)" stroke-width="2"/>';
+    });
+  });
+  bp.forEach(function (c, i) {
+    s += '<rect x="' + (x(i) - 10) + '" y="' + T + '" width="20" height="' + (H - T - B) + '" fill="transparent" data-tip="' + esc(fmtDay(String(c.czas_lokalny).slice(0, 10)) + ' ' + hhmm(c.czas_lokalny) + ': ' + c.skurczowe + '/' + c.rozkurczowe + (c.tetno ? ', tętno ' + c.tetno : '') + (c.kontekst ? ' (' + c.kontekst + ')' : '')) + '"/>';
+  });
+  if (bp.length) {
+    s += '<text x="' + L + '" y="' + (H - 4) + '">' + esc(fmtDay(String(bp[0].czas_lokalny).slice(0, 10))) + '</text>';
+    s += '<text x="' + W + '" y="' + (H - 4) + '" text-anchor="end">' + esc(fmtDay(String(bp[bp.length - 1].czas_lokalny).slice(0, 10))) + '</text>';
+  }
+  return s + '</svg>';
+}
+
+// ------------------------------------------------------------ zdarzenia (kliknięcia i pola)
+document.addEventListener('click', function (ev) {
+  var tipEl = ev.target.closest('[data-tip]');
+  if (tipEl) { var ch = tipEl.closest('.chart'); if (ch) { var tp = $('.tip', ch); if (tp) { tp.textContent = tipEl.getAttribute('data-tip'); tp.classList.remove('hint'); } } }
+  var tab = ev.target.closest('[data-tab]');
+  if (tab) { nav(tab.dataset.tab); return; }
+  var reg = ev.target.closest('#mapa .r');
+  if (reg && F) {
+    var id = reg.dataset.id, sel = selMap();
+    if (sel[id]) delete sel[id]; else sel[id] = true;
+    F.ep.lokalizacja = Object.keys(REG).filter(function (k) { return sel[k]; }).join(';');
+    saveDraft(); rerender('mapa'); return;
+  }
+  var el = ev.target.closest('[data-act]');
+  if (!el) return;
+  var a = el.dataset.act, v = el.dataset.v, f = el.dataset.f;
+  var A = {
+    back: function () { if (view.name === 'form' && F && F.isNew) saveDraft(); B = null; E = null; nav(el.dataset.to || 'home'); },
+    go: function () { if (el.dataset.to === 'bp') B = null; if (el.dataset.to === 'event') E = null; nav(el.dataset.to); },
+    sync: function () { sync.err = null; doSync(); },
+    cfgSave: function () {
+      var c = decodeCfg($('#cfgIn').value);
+      if (!c) { $('#cfgErr').hidden = false; return; }
+      cfg = c; LS.set('cfg', cfg); nav('home'); doSync();
+    },
+    unlink: function () {
+      if (!view.unlinkConfirm) { view.unlinkConfirm = true; render(); return; }
+      LS.del('cfg'); LS.del('cache'); LS.del('outbox'); LS.del('draft'); cfg = null; cache = null; outbox = []; nav('setup');
+    },
+    newEp: function () { newEpisode(!!el.dataset.back); },
+    editEp: function () { editEpisode(el.dataset.id); },
+    discardDraft: function () { LS.del('draft'); newEpisode(F && F.back); },
+    single: function () { F.ep[f] = F.ep[f] === v ? '' : v; saveDraft(); rerender(el.closest('[data-blk]').dataset.blk); },
+    bool: function () { F.ep[f] = F.ep[f] === true ? false : true; saveDraft(); el.classList.toggle('on', F.ep[f] === true); },
+    step: function () {
+      var c = STEP[f], cur = num(F.ep[f]);
+      var nv = cur === null ? c.start : Math.max(c.min, Math.min(c.max, cur + Number(el.dataset.d) * c.step));
+      F.ep[f] = nv; saveDraft(); rerender(el.closest('[data-blk]').dataset.blk);
+    },
+    startAgo: function () { setStart(new Date(Date.now() - Number(v) * 60000)); saveDraft(); rerender('czas'); },
+    endState: function () { if (v === '1') { if (!F.ep.koniec_lokalny) setEnd(new Date()); } else setEnd(null); saveDraft(); rerender('koniec'); },
+    endAgo: function () { setEnd(new Date(Date.now() - Number(v) * 60000)); saveDraft(); rerender('koniec'); },
+    mapAll: function () { F.ep.lokalizacja = Object.keys(REG).join(';'); saveDraft(); rerender('mapa'); },
+    mapClear: function () { F.ep.lokalizacja = ''; saveDraft(); rerender('mapa'); },
+    alarm: function () {
+      var on = String(F.ep.objawy_alarmowe || '').split('; ').filter(String);
+      var i = on.indexOf(v); if (i >= 0) on.splice(i, 1); else on.push(v);
+      F.ep.objawy_alarmowe = on.join('; '); saveDraft(); rerender('alarm');
+    },
+    medOpen: function () { var n = new Date(); F.med = { id_leku: '', dawka: '', czas_lokalny: localStr(n), czas_utc: n.toISOString(), nat: num(F.ep.natezenie_max) }; rerender('leki'); },
+    medCancel: function () { F.med = null; rerender('leki'); },
+    medPick: function () {
+      F.med.id_leku = el.dataset.id;
+      var opts = String((lekById(el.dataset.id) || {}).opcje_dawki || '').split(';').filter(String);
+      F.med.dawka = opts.length === 1 ? opts[0] : '';
+      rerender('leki');
+    },
+    medDose: function () { F.med.dawka = v; rerender('leki'); },
+    medAgo: function () { var d = new Date(Date.now() - Number(v) * 60000); F.med.czas_lokalny = localStr(d); F.med.czas_utc = d.toISOString(); rerender('leki'); },
+    medAdd: function () {
+      var m = F.med, lek = lekById(m.id_leku);
+      if (!lek || m.dawka === '') { $('#medErr').hidden = false; return; }
+      F.ep.leki = F.ep.leki || [];
+      F.ep.leki.push({ id: uuid(), id_leku: lek.id_leku, lek: lek.nazwa, kategoria_moh: lek.kategoria_moh, dawka: Number(m.dawka), jednostka: lek.jednostka,
+        paracetamol_mg: Math.round(Number(m.dawka) * (Number(lek.paracetamol_mg_na_jednostke) || 0)), czas_lokalny: m.czas_lokalny, czas_utc: m.czas_utc,
+        natezenie_przy_przyjeciu: num(m.nat) === null ? '' : m.nat, efekt_2h: '', kolejna_dawka: F.ep.leki.length > 0 });
+      F.med = null; saveDraft(); rerender('leki');
+    },
+    medDel: function () { F.ep.leki.splice(Number(el.dataset.i), 1); saveDraft(); rerender('leki'); },
+    medEff: function () { var l = F.ep.leki[Number(el.dataset.i)]; l.efekt_2h = l.efekt_2h === v ? '' : v; saveDraft(); rerender('leki'); },
+    saveEp: saveEpisode,
+    delEp: function () {
+      if (!F.delConfirm) { F.delConfirm = true; el.textContent = 'Na pewno usunąć? Dotknij ponownie'; return; }
+      queue('deleteEpisode', { id: F.ep.id }); F = null; toast('Usunięto'); nav('home');
+    },
+    closeEp: function () {
+      var e = cache.epizody.filter(function (x) { return x.id === el.dataset.id; })[0];
+      if (!e) return;
+      C = { ep: JSON.parse(JSON.stringify(e)) };
+      var n = new Date(); C.ep.koniec_lokalny = localStr(n); C.ep.koniec_utc = n.toISOString();
+      nav('close');
+    },
+    closeAgo: function () { var d = new Date(Date.now() - Number(v) * 60000); C.ep.koniec_lokalny = localStr(d); C.ep.koniec_utc = d.toISOString(); $('[data-f="closeEnd"]').value = inputVal(C.ep.koniec_lokalny); },
+    closeEff: function () { var l = C.ep.leki[Number(el.dataset.i)]; l.efekt_2h = l.efekt_2h === v ? '' : v; $$('[data-act="closeEff"][data-i="' + el.dataset.i + '"]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === l.efekt_2h); }); },
+    closeSave: function () {
+      var st = epStart(C.ep), en = epEnd(C.ep);
+      if (st && en && en < st) { toast('Koniec jest przed początkiem bólu.'); return; }
+      queue('saveEpisode', C.ep); C = null; toast('Zapisano'); nav('home');
+    },
+    evalEff: function () {
+      var e = cache.epizody.filter(function (x) { return x.id === el.dataset.ep; })[0];
+      if (!e) return;
+      var c = JSON.parse(JSON.stringify(e));
+      c.leki.forEach(function (l) { if (l.id === el.dataset.l) l.efekt_2h = v; });
+      queue('saveEpisode', c); toast('Zapisano'); render();
+    },
+    bpAgo: function () { var d = new Date(Date.now() - Number(v) * 60000); B.czas_lokalny = localStr(d); B.czas_utc = d.toISOString(); $('[data-f="bpTime"]').value = inputVal(B.czas_lokalny); },
+    bpCtx: function () { B.kontekst = B.kontekst === v ? '' : v; $$('[data-act="bpCtx"]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === B.kontekst); }); },
+    bpSave: function () {
+      var sk = num(B.skurczowe), rk = num(B.rozkurczowe), tt = num(B.tetno), err = '';
+      if (sk === null || sk < 60 || sk > 260) err = 'Wpisz górne ciśnienie (60–260).';
+      else if (rk === null || rk < 30 || rk > 160) err = 'Wpisz dolne ciśnienie (30–160).';
+      else if (tt !== null && (tt < 25 || tt > 220)) err = 'Tętno wygląda nieprawidłowo (25–220).';
+      if (err) { var e2 = $('#bpErr'); e2.textContent = err; e2.hidden = false; return; }
+      B.skurczowe = sk; B.rozkurczowe = rk; B.tetno = tt === null ? '' : tt;
+      queue('saveBp', B); B = null; toast('Zapisano pomiar'); nav('home');
+    },
+    delBp: function () { queue('deleteBp', { id: el.dataset.id }); toast('Usunięto'); render(); },
+    evType: function () { E.typ = v; $$('[data-act="evType"]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); }); $('#evErr').hidden = true; },
+    evLek: function () { E.id_leku = v; $$('[data-act="evLek"]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); }); },
+    evSave: function () {
+      if (!E.typ) { $('#evErr').hidden = false; return; }
+      var l = lekById(E.id_leku); E.lek = l ? l.nazwa : '';
+      queue('saveEvent', E); E = null; toast('Zapisano'); nav('more');
+    },
+    delEv: function () { queue('deleteEvent', { id: el.dataset.id }); toast('Usunięto'); render(); },
+    period: function () { view.period = Number(v); render(); }
+  };
+  if (A[a]) A[a]();
+});
+document.addEventListener('change', function (ev) {
+  var el = ev.target, f = el.dataset && el.dataset.f;
+  if (!f) return;
+  var d = fromLocal(el.value);
+  if (f === 'start' && d) { setStart(d); saveDraft(); rerender('czas'); }
+  else if (f === 'end' && d) { setEnd(d); saveDraft(); }
+  else if (f === 'medTime' && d && F.med) { F.med.czas_lokalny = localStr(d); F.med.czas_utc = d.toISOString(); }
+  else if (f === 'kofeina_ostatnia') { F.ep.kofeina_ostatnia = el.value; saveDraft(); }
+  else if (f === 'closeEnd' && d) { C.ep.koniec_lokalny = localStr(d); C.ep.koniec_utc = d.toISOString(); }
+  else if (f === 'bpTime' && d) { B.czas_lokalny = localStr(d); B.czas_utc = d.toISOString(); }
+  else if (f === 'evDate') { E.data = el.value; }
+});
+document.addEventListener('input', function (ev) {
+  var el = ev.target, f = el.dataset && el.dataset.f;
+  if (!f) return;
+  if (f === 'uwagi' && F) { F.ep.uwagi = el.value; saveDraft(); }
+  else if ((f === 'skurczowe' || f === 'rozkurczowe' || f === 'tetno') && B) { B[f] = el.value; var e = $('#bpErr'); if (e) e.hidden = true; }
+  else if (f === 'bpUwagi' && B) B.uwagi = el.value;
+  else if (f === 'evDawka' && E) E.dawka = el.value;
+  else if (f === 'evSz' && E) E.szczegoly = el.value;
+});
+
+// ------------------------------------------------------------ start
+window.addEventListener('online', function () { sync.err = null; doSync(); });
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && cfg && ['home', 'history', 'stats', 'more'].indexOf(view.name) >= 0) doSync(); });
+setInterval(function () { if (outbox.length && cfg) doSync(); }, 60000);
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch(function () {});
+}
+render();
+if (cfg) doSync();
+</script>
+</body>
+</html>
