@@ -126,7 +126,7 @@ td.num,th.num{text-align:right}
 <div class="toast" id="toast"></div>
 <script>
 'use strict';
-var WERSJA_APP = '1.0';
+var WERSJA_APP = '1.2';
 
 // ------------------------------------------------------------ narzędzia
 var $ = function (s, el) { return (el || document).querySelector(s); };
@@ -401,11 +401,11 @@ function headSvg(o) {
 
 // ------------------------------------------------------------ formularz bólu
 var SYMPT = {
-  nudnosci: 'Nudności', wymioty: 'Wymioty', swiatlowstret: 'Światło przeszkadza', nadwrazliwosc_dzwiek: 'Dźwięki przeszkadzają',
-  nadwrazliwosc_zapach: 'Zapachy przeszkadzają', nasila_ruch: 'Gorzej przy ruchu', przeczulica_skory: 'Boli skóra przy dotyku / czesaniu',
+  staly_bol: 'Stały ból', nudnosci: 'Nudności', wymioty: 'Wymioty', swiatlowstret: 'Światło przeszkadza', nadwrazliwosc_dzwiek: 'Dźwięki przeszkadzają',
+  nadwrazliwosc_zapach: 'Zapachy przeszkadzają', nasila_ruch: 'Nasila się przy ruchu', przeczulica_skory: 'Boli skóra przy dotyku / czesaniu',
   lzawienie_oka: 'Łzawi oko', zaczerwienienie_oka: 'Oko zaczerwienione', katar: 'Katar / zatkany nos'
 };
-var TOP = { ojciec: ['przeczulica_skory', 'lzawienie_oka', 'zaczerwienienie_oka', 'katar'], syn: ['nudnosci', 'wymioty', 'swiatlowstret', 'nadwrazliwosc_dzwiek', 'nasila_ruch'] };
+var TOP = { ojciec: ['staly_bol', 'przeczulica_skory', 'lzawienie_oka', 'zaczerwienienie_oka', 'katar'], syn: ['staly_bol', 'nudnosci', 'wymioty', 'swiatlowstret', 'nadwrazliwosc_dzwiek', 'nasila_ruch'] };
 var BLOKI = {
   ojciec: { main: ['czas', 'poczatek', 'natezenie', 'mapa', 'charakter', 'objawyTop', 'kofeina', 'leki', 'koniec', 'alarm', 'uwagi'], more: ['objawyRest', 'aura', 'wplyw', 'okolicznosci'] },
   syn: { main: ['czas', 'natezenie', 'mapa', 'charakter', 'aura', 'objawyTop', 'leki', 'koniec', 'wplyw', 'alarm', 'uwagi'], more: ['objawyRest', 'okolicznosci', 'kofeina', 'poczatek'] }
@@ -414,7 +414,7 @@ var ALARM = {
   wspolne: ['Nagły ból „najsilniejszy w życiu”', 'Niedowład lub zaburzenia mowy', 'Gorączka ze sztywnością karku', 'Nagłe zaburzenia widzenia lub podwójne widzenie'],
   ojciec: ['Ból żuchwy przy żuciu', 'Zażółcenie skóry lub oczu', 'Ciemny mocz']
 };
-var STEP = { kofeina_ile: { min: 0, max: 15, step: 1, start: 1, unit: '' }, sen_h: { min: 0, max: 14, step: 0.5, start: 7, unit: ' h' } };
+var STEP = { kawa_ile: { min: 0, max: 10, step: 1, start: 1, unit: '' }, herbata_ile: { min: 0, max: 10, step: 1, start: 1, unit: '' }, sen_h: { min: 0, max: 14, step: 0.5, start: 7, unit: ' h' } };
 var F = null;
 
 function newEpisode(back) {
@@ -462,6 +462,13 @@ function chipsSingle(f, opts) {
     return '<button class="chip' + (F.ep[f] === v ? ' on' : '') + '" data-act="single" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(v.charAt(0).toUpperCase() + v.slice(1)) + '</button>';
   }).join('') + '</div>';
 }
+function multiVals(f) { return String(F.ep[f] || '').split('; ').filter(String); }
+function chipsMulti(f, opts) {
+  var on = multiVals(f);
+  return '<div class="chips">' + opts.map(function (v) {
+    return '<button class="chip' + (on.indexOf(v) >= 0 ? ' on' : '') + '" data-act="multi" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(v.charAt(0).toUpperCase() + v.slice(1)) + '</button>';
+  }).join('') + '</div>';
+}
 function chipsBool(list) {
   return '<div class="chips">' + list.map(function (f) {
     return '<button class="chip' + (F.ep[f] === true ? ' on' : '') + '" data-act="bool" data-f="' + f + '">' + esc(SYMPT[f] || f) + '</button>';
@@ -505,7 +512,7 @@ var BLOK = {
       '<p style="font-size:15px">' + (names ? esc(names) + ' · <b>' + esc(s) + '</b>' : '<span class="hint">Nic nie zaznaczono</span>') + '</p>' +
       '<div class="chips"><button class="chip ghost" data-act="mapAll">Cała głowa</button><button class="chip ghost" data-act="mapClear">Wyczyść</button></div>';
   },
-  charakter: function () { return '<h3>Jaki to ból?</h3>' + chipsSingle('charakter', ['pulsujący', 'uciskowy', 'kłujący', 'piekący', 'napady „jak prąd”']); },
+  charakter: function () { return '<h3>Jaki to ból?</h3><p class="hint">Można zaznaczyć kilka.</p>' + chipsMulti('charakter', ['pulsujący', 'uciskowy', 'kłujący', 'piekący', 'napady „jak prąd”']); },
   aura: function () { return '<h3>Aura przed bólem?</h3>' + chipsSingle('aura', ['brak', 'wzrokowa', 'czuciowa (mrowienie)', 'zaburzenia mowy']); },
   objawyTop: function () { return '<h3>Objawy</h3>' + chipsBool(TOP[prof()]); },
   objawyRest: function () {
@@ -513,8 +520,13 @@ var BLOK = {
     return '<h3>Inne objawy</h3>' + chipsBool(Object.keys(SYMPT).filter(function (k) { return top.indexOf(k) < 0; }));
   },
   kofeina: function () {
-    return '<h3>Kawa i herbata dziś</h3>' + stepper('kofeina_ile') +
-      '<div class="field"><label>Ostatnia o godzinie</label><input type="time" data-f="kofeina_ostatnia" value="' + esc(F.ep.kofeina_ostatnia || '') + '"></div>';
+    return '<h3>Kawa i herbata dziś</h3>' +
+      '<div class="field" style="margin-top:0"><label>Kawa (filiżanki)</label>' + stepper('kawa_ile') + '</div>' +
+      '<div class="field"><label>Herbata czarna lub zielona (kubki); ziołowej nie licz</label>' + stepper('herbata_ile') + '</div>' +
+      '<div class="field"><label>Ostatnia kawa lub herbata o godzinie</label><div class="row" style="align-items:center">' +
+      '<input type="time" data-f="kofeina_ostatnia" value="' + esc(F.ep.kofeina_ostatnia || '') + '">' +
+      '<button class="chip ghost" style="flex:0 0 auto" data-act="clearCafTime">Wyczyść</button></div></div>' +
+      '<p class="hint">Minus przy zerze czyści pole (—), czyli „nie wpisuję”.</p>';
   },
   wplyw: function () {
     var s = '<h3>Jak funkcjonujesz?</h3>' + chipsSingle('wplyw', ['normalnie', 'trochę ograniczony', 'mocno ograniczony', 'muszę leżeć']);
@@ -639,6 +651,7 @@ function saveEpisode() {
   Object.keys(SYMPT).concat(['pominiety_posilek', 'alkohol', 'wysilek']).forEach(function (k) {
     if (ep[k] !== true) ep[k] = visibleBools.indexOf(k) >= 0 ? false : '';
   });
+  if (!(num(ep.kawa_ile) > 0) && !(num(ep.herbata_ile) > 0)) ep.kofeina_ostatnia = '';
   if (ep.start_utc && Date.now() - new Date(ep.start_utc).getTime() > 6 * 3600000 && F.isNew) { ep.lat = ''; ep.lon = ''; ep.miasto = ''; }
   var st = epStart(ep), en = epEnd(ep);
   if (st && en && en < st) { toast('Koniec bólu jest przed początkiem. Popraw godzinę.'); return; }
@@ -1066,10 +1079,17 @@ document.addEventListener('click', function (ev) {
     editEp: function () { editEpisode(el.dataset.id); },
     discardDraft: function () { LS.del('draft'); newEpisode(F && F.back); },
     single: function () { F.ep[f] = F.ep[f] === v ? '' : v; saveDraft(); rerender(el.closest('[data-blk]').dataset.blk); },
+    multi: function () {
+      var on = multiVals(f), i = on.indexOf(v);
+      if (i >= 0) on.splice(i, 1); else on.push(v);
+      F.ep[f] = on.join('; '); saveDraft(); el.classList.toggle('on', i < 0);
+    },
+    clearCafTime: function () { F.ep.kofeina_ostatnia = ''; saveDraft(); rerender('kofeina'); },
     bool: function () { F.ep[f] = F.ep[f] === true ? false : true; saveDraft(); el.classList.toggle('on', F.ep[f] === true); },
     step: function () {
       var c = STEP[f], cur = num(F.ep[f]);
-      var nv = cur === null ? c.start : Math.max(c.min, Math.min(c.max, cur + Number(el.dataset.d) * c.step));
+      var d = Number(el.dataset.d);
+      var nv = cur === null ? (d > 0 ? c.start : '') : (d < 0 && cur <= c.min ? '' : Math.max(c.min, Math.min(c.max, cur + d * c.step)));
       F.ep[f] = nv; saveDraft(); rerender(el.closest('[data-blk]').dataset.blk);
     },
     startAgo: function () { setStart(new Date(Date.now() - Number(v) * 60000)); saveDraft(); rerender('czas'); },
